@@ -43,11 +43,11 @@ class Note {
     });
 
     this.editButton.addEventListener('click', () => {
-      this._feldActivate();
+      this.feldActivate();
     });
 
     this.saveButton.addEventListener('click', () => {
-      this._feldDEActivate();
+      this.feldDEActivate();
       this.modifyLS();
     });
 
@@ -55,9 +55,13 @@ class Note {
     this.noteStatus();
   }
 
+  /**
+   *  Liest oder setzt den Fertigstellungsstatus der Notiz.
+   * @type {boolean}
+   */
   set done(item) {
     this._done = item;
-    this._feldDEActivate();
+    this.feldDEActivate();
     this.noteStatus();
   }
 
@@ -65,22 +69,35 @@ class Note {
     return this._done;
   }
 
-  _feldActivate() {
+  /**
+   *Aktiviert das Feld zum Bearbeiten einer Notiz.
+   *Setzt den Fertigstellungsstatus auf `false`.
+   */
+  feldActivate() {
     this.done = false;
     this.input.disabled = false;
     this.item.classList.add('note_border');
   }
 
-  _feldDEActivate() {
+  /**
+   *Deaktiviert das Feld zum Bearbeiten einer Notiz.
+   */
+  feldDEActivate() {
     this.input.disabled = true;
     this.item.classList.remove('note_border');
   }
 
+  /**
+   * Aktualisiert die Farbe der Notiz in Abhängigkeit von ihrer Fertigstellung.
+   */
   noteStatus() {
     if (this.done) this.item.classList.add('note_active');
     else this.item.classList.remove('note_active');
   }
 
+  /**
+   * Ändert den Lokalspeicher nach dem Ändern einer Notiz.
+   */
   modifyLS() {
     if (!localStorage.getItem(this.parent.title)) return;
     const list = JSON.parse(localStorage.getItem(this.parent.title));
@@ -93,6 +110,9 @@ class Note {
     localStorage.setItem(this.parent.title, JSON.stringify(list));
   }
 
+  /**
+   * die Notiz wird gelöscht
+   */
   delete() {
     this.parent._noteList.splice(this.id - 1, 1);
     this.parent._noteList.forEach((element) => (element.id = 0));

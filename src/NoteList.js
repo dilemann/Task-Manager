@@ -34,6 +34,10 @@ class NoteList {
     this.checkEmpty();
   }
 
+  /**
+   * gibt die Identifikationsnummer der Noten zurück
+   * @returns
+   */
   getNewId() {
     let max = 0;
     this._noteList.forEach((note) => {
@@ -43,8 +47,8 @@ class NoteList {
   }
 
   /**
-   * Text zu einer Notiz hinzufügen
-   * @param {string} item
+   * Erstellt eine neue Notiz mit dem angegebenen Textinhalt.
+   * @param {string} item - Der Textinhalt der neuen Notiz.
    */
   addNote(item) {
     const newNote = new Note(this, item);
@@ -55,7 +59,7 @@ class NoteList {
 
   /**
    * Speichern von Notizdaten auf localStorage
-   * @param {}
+   *
    */
   saveLS() {
     if (!this._noteList.length) return;
@@ -73,6 +77,11 @@ class NoteList {
     this.checkEmpty();
   }
 
+  /**
+   * Initialisierung von Notizen aus localstorage, wenn der Datensatz existiert
+   *
+   */
+
   noteInit() {
     if (!localStorage.getItem(this.title)) return;
     this._noteList = JSON.parse(localStorage.getItem(this.title));
@@ -82,6 +91,11 @@ class NoteList {
       newNote.id = element.id;
     });
   }
+
+  /**
+   * Prüfung, wenn das Feld leer ist, wird die entsprechende Meldung angezeigt
+   *
+   */
 
   checkEmpty() {
     if (this._noteList.length === 0) {

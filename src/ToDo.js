@@ -42,6 +42,9 @@ class ToDo {
     this.header.textContent = title;
   }
 
+  /**
+   * Löschung von Benutzern
+   */
   removeUser() {
     if (!this.user) return;
     this.header.textContent = '';
@@ -69,6 +72,10 @@ class ToDo {
     }
   }
 
+  /**
+   * Fügt der Navigation eine Benutzerschaltfläche hinzu.
+   * @param {string} title - Titel der Benutzerschaltfläche.
+   */
   addNavList(title) {
     const btn = document.createElement('button');
     btn.classList.add('user__btn', 'btn');
@@ -84,6 +91,10 @@ class ToDo {
     this.btnActive(title);
   }
 
+  /**
+   * Legt den aktuellen Benutzer fest.
+   * @type {string} ist der Name des aktuellen Benutzers.
+   */
   set currentUser(title) {
     this._currentUser = title;
     this.container.lastChild.remove();
@@ -92,10 +103,17 @@ class ToDo {
     this.btnActive(title);
   }
 
+  /**
+   * Ruft den aktuellen Benutzer ab.
+   * @Typ {String}
+   */
   get currentUser() {
     return this._currentUser;
   }
 
+  /**
+   * Initialisiert die ToDo-Anwendung.
+   */
   ToDoInit() {
     if (
       localStorage.getItem('currentUser') &&
@@ -110,6 +128,10 @@ class ToDo {
     }
   }
 
+  /**
+   * Schaltet die Schaltfläche des Benutzers aktiv.
+   * @param {string} title ist der Name des Benutzers, für den die Schaltfläche aktiviert wird.
+   */
   btnActive(title) {
     localStorage.setItem('nav-list', JSON.stringify(this.userList));
     this.userList.forEach((element) => {
