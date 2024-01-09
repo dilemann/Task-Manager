@@ -121,6 +121,8 @@ class Note {
     );
     this.parent.saveLS();
     this.item.remove();
+    this.parent.saveLS();
+    this.parent.checkEmpty();
   }
 }
 
