@@ -62,7 +62,10 @@ class NoteList {
    *
    */
   saveLS() {
-    if (!this._noteList.length) return;
+    if (!this._noteList.length) {
+      localStorage.removeItem(this.title);
+      return;
+    }
     const list = [];
     this._noteList.forEach((element) => {
       const obj = {
