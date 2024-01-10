@@ -3,8 +3,8 @@ import User from './User.js';
 class ToDo {
   constructor(parent) {
     this._currentUser = [];
+    this._lastUser = [];
     this.userList = [];
-    this.user = null;
     this.parent = parent;
     this.container = document.createElement('div');
     this.wrapperNav = document.createElement('div');
@@ -15,7 +15,6 @@ class ToDo {
 
     this.container.classList.add('container');
     this.nav.classList.add('nav');
-    // this.button.disabled = false;
 
     this.wrapperNav.append(this.nav);
     this.wrapperNav.append(this.header);
@@ -36,71 +35,47 @@ class ToDo {
       alert('Same name is forbidden!');
       return;
     }
-    if (this.userList.length !== 0) this.container.lastChild.remove();
-    this.user = new User(this.container, title);
-    this.addNavList(title);
-    this.header.textContent = title;
+    this.currentUser = new User(this, title);
   }
 
   /**
    * Löschung von Benutzern
    */
   removeUser() {
-    if (!this.user) return;
-    this.header.textContent = '';
-    if (localStorage.getItem(this.user.title)) {
-      localStorage.removeItem(this.user.title);
-    }
-    if (this.userList.length > 1) {
-      const newUserList = this.userList.filter(
-        (num) => num.title !== this.user.title
-      );
-      this.user.container.remove();
-      this.userList = newUserList;
-      const currentUser = this.userList[this.userList.length - 1];
-      localStorage.setItem('nav-list', JSON.stringify(this.userList));
-      localStorage.setItem('currentUser', JSON.stringify(currentUser.title));
-      this.nav.innerHTML = '';
-      this.userList = [];
-      this.ToDoInit();
-    } else {
-      this.userList = [];
-      this.nav.innerHTML = '';
-      this.user.container.remove();
-      localStorage.removeItem('nav-list');
-      localStorage.removeItem('currentUser');
-    }
-  }
+    if (this.userList.length === 0) return;
 
-  /**
-   * Fügt der Navigation eine Benutzerschaltfläche hinzu.
-   * @param {string} title - Titel der Benutzerschaltfläche.
-   */
-  addNavList(title) {
-    const btn = document.createElement('button');
-    btn.classList.add('user__btn', 'btn');
-    this.nav.append(btn);
-    btn.textContent = title;
-    btn.addEventListener('click', () => {
-      this.currentUser = title;
+    if (this.userList.length <= 1) {
+      this.userList = [];
+      this.nav.innerHTML = '';
+      this.header.innerHTML = '';
+      this.container.lastChild.remove();
+      localStorage.removeItem('nav-list');
+      return;
+    }
+
+    this.currentUser.container.remove();
+    this.userList = this.userList.filter(
+      (user) => user.userNavBtn !== this.currentUser.userNavBtn
+    );
+    this.userList[this.userList.length - 1].userNavBtn =
+      this.currentUser.userNavBtn;
+    console.log(this.userList);
+    this.nav.innerHTML = '';
+    this.userList.forEach((user) => {
+      const newUser = new User(this, user.title);
     });
-    this.userList.push({
-      title,
-      btn,
-    });
-    this.btnActive(title);
+    this.currentUser.userNavBtnActivate();
   }
 
   /**
    * Legt den aktuellen Benutzer fest.
-   * @type {string} ist der Name des aktuellen Benutzers.
+   * @type {User} ist der Name des aktuellen Benutzers.
    */
-  set currentUser(title) {
-    this._currentUser = title;
-    this.container.lastChild.remove();
-    this.user = new User(this.container, title);
-    this.header.textContent = title;
-    this.btnActive(title);
+  set currentUser(user) {
+    this._currentUser = user;
+    this.userList.push(this.currentUser);
+    console.log('setter!');
+    user.userNavBtnActivate();
   }
 
   /**
@@ -115,32 +90,13 @@ class ToDo {
    * Initialisiert die ToDo-Anwendung.
    */
   ToDoInit() {
-    if (
-      localStorage.getItem('currentUser') &&
-      localStorage.getItem('nav-list')
-    ) {
-      const list = JSON.parse(localStorage.getItem('nav-list'));
-      const currentUserName = JSON.parse(localStorage.getItem('currentUser'));
-      list.forEach((element) => this.addNavList(element.title));
-      this.user = new User(this.container, currentUserName);
-      this.btnActive(currentUserName);
-      this.header.textContent = currentUserName;
-    }
-  }
+    if (!localStorage.getItem('nav-list')) return;
 
-  /**
-   * Schaltet die Schaltfläche des Benutzers aktiv.
-   * @param {string} title ist der Name des Benutzers, für den die Schaltfläche aktiviert wird.
-   */
-  btnActive(title) {
-    localStorage.setItem('nav-list', JSON.stringify(this.userList));
-    this.userList.forEach((element) => {
-      element.btn.classList.remove('user__btn_active');
-      if (title === element.btn.textContent) {
-        element.btn.classList.add('user__btn_active');
-      }
+    this.userList = JSON.parse(localStorage.getItem('nav-list'));
+    this.nav.innerHTML = '';
+    this.userList.forEach((user) => {
+      const newUser = new User(this, user.title);
     });
-    localStorage.setItem('currentUser', JSON.stringify(title));
   }
 }
 

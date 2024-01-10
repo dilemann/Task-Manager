@@ -8,6 +8,7 @@
     "no-return-assign": "off",
     "comma-dangle": "off",
     "import/extensions": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "class-methods-use-this": "warn"
   }
 }
