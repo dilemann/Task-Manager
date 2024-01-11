@@ -6,36 +6,42 @@ class ToDo {
     this._lastUser = [];
     this.userList = [];
     this.parent = parent;
+
+    // erstelle Elemente
     this.container = document.createElement('div');
     this.wrapperNav = document.createElement('div');
     this.nav = document.createElement('nav');
     this.header = document.createElement('h2');
 
-    this.actionBtn = document.querySelector('#add');
-
+    // füge Elementen Stile hinzu
     this.container.classList.add('container');
     this.nav.classList.add('nav');
 
+    // füge Elemente zum Dom hinzu
     this.wrapperNav.append(this.nav);
     this.wrapperNav.append(this.header);
     this.container.append(this.wrapperNav);
     this.parent.append(this.container);
-    this.ToDoInit();
+
+    this.initialise();
   }
 
   /**
    * ein neuer Benutzer wird mit dem übergebenem Titel erstellt
    * @param {string} title
    */
-
   addNewUser(title) {
     if (!title) return;
+
     const foundDuplicate = this.userList.some((user) => user.title === title);
     if (foundDuplicate) {
       alert('Same name is forbidden!');
       return;
     }
+
     this.currentUser = new User(this, title);
+    this.userList.push(this.currentUser);
+    this.saveNavList();
   }
 
   /**
@@ -44,31 +50,28 @@ class ToDo {
   removeUser() {
     if (this.userList.length === 0) return;
 
-    if (this.userList.length <= 1) {
-      this.userList = [];
-      this.nav.innerHTML = '';
+    console.log(this.userList);
+    const indexOfUserToRemove = this.userList.findIndex(
+      (user) => user.active === true
+    );
+    console.log(indexOfUserToRemove);
+    let needToSave = false;
+    if (indexOfUserToRemove !== -1) {
+      const userToRemove = this.userList[indexOfUserToRemove];
+      userToRemove.userNavBtn.remove();
+      userToRemove.container.remove();
       this.header.innerHTML = '';
-      this.container.lastChild.remove();
-      localStorage.removeItem('nav-list');
-      return;
+
+      this.userList.splice(indexOfUserToRemove, 1);
+      needToSave = true;
     }
 
-    this.userList.forEach((user) => {
-      if (user.userNavBtn.className === 'user__btn btn user__btn_active') {
-        user.userNavBtn.remove();
-        user.container.remove();
-
-        const indexToRemove = this.userList.indexOf(user);
-        if (indexToRemove !== -1) {
-          this.userList.splice(indexToRemove, 1);
-        }
-      }
-    });
-
-    const lastUser = this.userList[this.userList.length - 1];
-    lastUser.userNavBtn.className.userNavBtnActivate();
-
-    this.ToDoInit();
+    const newСurrentUser = this.userList[this.userList.length - 1];
+    if (newСurrentUser) {
+      this.currentUser = newСurrentUser;
+      needToSave = true;
+    }
+    if (needToSave) this.saveNavList();
   }
 
   /**
@@ -77,9 +80,10 @@ class ToDo {
    */
   set currentUser(user) {
     this._currentUser = user;
-    this.userList.push(this.currentUser);
-    console.log('setter!');
-    user.userNavBtnActivate();
+    const activeUser = this.userList.find((storedUser) => storedUser.active);
+    if (activeUser) activeUser.deactivate();
+    this.currentUser.activate();
+    this.currentUser.reload();
   }
 
   /**
@@ -93,22 +97,39 @@ class ToDo {
   /**
    * Initialisiert die ToDo-Anwendung.
    */
-  ToDoInit() {
-    if (!localStorage.getItem('nav-list')) return;
-    const list = JSON.parse(localStorage.getItem('nav-list'));
+  initialise() {
+    if (!localStorage.getItem('user-list')) return;
+
+    const list = this.getNavList();
     this.nav.innerHTML = '';
     let lastActiveUser = null;
 
-    list.forEach((user) => {
-      const newUser = new User(this, user.title);
+    list.forEach(({ user }) => {
+      console.log(user.active);
+      const newUser = new User(this, user.title, user.active);
       this.userList.push(newUser);
-      if (user.btn === 'user__btn btn user__btn_active') {
+      if (user.active) {
         lastActiveUser = newUser;
-        lastActiveUser.userNavBtn.className = 'user__btn btn user__btn_active';
       }
     });
+    console.log(this.userList);
 
     if (lastActiveUser) lastActiveUser.reload();
+  }
+
+  saveNavList() {
+    localStorage.setItem(
+      'user-list',
+      JSON.stringify(
+        this.userList.map((item) => ({
+          user: item.toJSON(),
+        }))
+      )
+    );
+  }
+
+  getNavList() {
+    return JSON.parse(localStorage.getItem('user-list'));
   }
 }
 

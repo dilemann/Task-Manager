@@ -1,16 +1,25 @@
 import NoteList from './NoteList.js';
 
 class User {
-  constructor(parent, title) {
+  constructor(parent, title, active) {
+    this.className = 'user-container';
+    this.activeBtnClassName = 'user__btn_active';
+    this.defaultBtnClassName = 'user__btn btn';
+
+    this.userNavBtn = document.createElement('button');
+    this.userNavBtn.className = this.defaultBtnClassName;
+    this.active = active;
+    this.active ? this.activate() : this.deactivate();
+
     this.title = title;
+
     this.parent = parent;
     this.container = document.createElement('div');
+    this.container.className = this.className;
     this.reload();
-    this.container.className = 'user-container';
-    this.parent.container.append(this.container);
-    this.userNavBtn = document.createElement('button');
+
     this.userNavBtn.innerHTML = this.title;
-    this.userNavBtn.className = 'user__btn btn';
+
     this.parent.nav.append(this.userNavBtn);
     this.noteList = new NoteList(this.container, this.title);
     this.parent.header.innerHTML = this.title;
@@ -22,29 +31,39 @@ class User {
   /// nav
 
   reload() {
-    const previousContainer = document.querySelector('.user-container');
+    const previousContainer = document.querySelector(`.${this.className}`);
+
     if (previousContainer) {
       previousContainer.remove();
-      this.parent.container.append(this.container);
-      this.parent.header.innerHTML = this.title;
     }
+
+    this.parent.container.append(this.container);
+    this.parent.header.innerHTML = this.title;
+
+    return this;
   }
 
   userNavBtnActivate() {
     document.querySelectorAll('.user__btn').forEach((btn) => {
-      if (this.userNavBtn === btn) btn.classList.add('user__btn_active');
-      else btn.classList.remove('user__btn_active');
+      if (this.userNavBtn === btn) btn.classList.add(this.activeBtnClassName);
+      else btn.classList.remove(this.activeBtnClassName);
     });
+    this.active = true;
+    this.parent.saveNavList();
+  }
 
-    localStorage.setItem(
-      'nav-list',
-      JSON.stringify(
-        this.parent.userList.map((user) => ({
-          title: user.title,
-          btn: user.userNavBtn.className,
-        }))
-      )
-    );
+  activate() {
+    this.active = true;
+    this.userNavBtn.classList.add(this.activeBtnClassName);
+  }
+
+  deactivate() {
+    this.active = false;
+    this.userNavBtn.classList.remove(this.activeBtnClassName);
+  }
+
+  toJSON() {
+    return { title: this.title, active: this.active };
   }
 }
 
