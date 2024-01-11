@@ -11,5 +11,5 @@ action.addEventListener('click', () => {
 });
 
 removeBtn.addEventListener('click', () => {
-  newToDo.removeUser();
+  // newToDo.removeUser();
 });

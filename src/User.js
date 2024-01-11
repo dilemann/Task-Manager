@@ -12,14 +12,11 @@ class User {
     this.userNavBtn.innerHTML = this.title;
     this.userNavBtn.className = 'user__btn btn';
     this.parent.nav.append(this.userNavBtn);
-
     this.noteList = new NoteList(this.container, this.title);
     this.parent.header.innerHTML = this.title;
-
     this.userNavBtn.addEventListener('click', () => {
       this.reload();
       this.userNavBtnActivate();
-      this.parent.header.innerHTML = this.title;
     });
   }
   /// nav
@@ -29,6 +26,7 @@ class User {
     if (previousContainer) {
       previousContainer.remove();
       this.parent.container.append(this.container);
+      this.parent.header.innerHTML = this.title;
     }
   }
 

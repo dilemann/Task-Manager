@@ -53,18 +53,22 @@ class ToDo {
       return;
     }
 
-    this.currentUser.container.remove();
-    this.userList = this.userList.filter(
-      (user) => user.userNavBtn !== this.currentUser.userNavBtn
-    );
-    this.userList[this.userList.length - 1].userNavBtn =
-      this.currentUser.userNavBtn;
-    console.log(this.userList);
-    this.nav.innerHTML = '';
     this.userList.forEach((user) => {
-      const newUser = new User(this, user.title);
+      if (user.userNavBtn.className === 'user__btn btn user__btn_active') {
+        user.userNavBtn.remove();
+        user.container.remove();
+
+        const indexToRemove = this.userList.indexOf(user);
+        if (indexToRemove !== -1) {
+          this.userList.splice(indexToRemove, 1);
+        }
+      }
     });
-    this.currentUser.userNavBtnActivate();
+
+    const lastUser = this.userList[this.userList.length - 1];
+    lastUser.userNavBtn.className.userNavBtnActivate();
+
+    this.ToDoInit();
   }
 
   /**
@@ -91,12 +95,20 @@ class ToDo {
    */
   ToDoInit() {
     if (!localStorage.getItem('nav-list')) return;
-
-    this.userList = JSON.parse(localStorage.getItem('nav-list'));
+    const list = JSON.parse(localStorage.getItem('nav-list'));
     this.nav.innerHTML = '';
-    this.userList.forEach((user) => {
+    let lastActiveUser = null;
+
+    list.forEach((user) => {
       const newUser = new User(this, user.title);
+      this.userList.push(newUser);
+      if (user.btn === 'user__btn btn user__btn_active') {
+        lastActiveUser = newUser;
+        lastActiveUser.userNavBtn.className = 'user__btn btn user__btn_active';
+      }
     });
+
+    if (lastActiveUser) lastActiveUser.reload();
   }
 }
 
