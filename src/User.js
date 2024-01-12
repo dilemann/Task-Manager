@@ -2,32 +2,49 @@ import NoteList from './NoteList.js';
 
 class User {
   constructor({ container, nav, userList, saveNavList }, title, active) {
+    // Komponenten der übergeordneten Klasse
     this.parentContainer = container;
     this.userNavigation = nav;
     this.userList = userList;
+
+    // Methoden der übergeordneten Klasse
     this.saveNavList = saveNavList;
 
+    // Abruf des Benutzernamens
+    this.title = title;
+
+    // Stilvariablen erstellen
     this.className = 'user-container';
     this.activeBtnClassName = 'user__btn_active';
     this.defaultBtnClassName = 'user__btn btn';
 
+    // Erstellung von Containern und Kopfzeilen
+    this.container = document.createElement('div');
+    this.userTitle = document.createElement('h2');
+
+    // Containerverladung
+    this.reload();
+
+    // Erstellen einer Benutzerschaltfläche für die Navigation
     this.userNavBtn = document.createElement('button');
+    this.userNavBtn.innerHTML = this.title;
+
+    // füge Elementen Stile hinzu
+    this.container.className = this.className;
     this.userNavBtn.className = this.defaultBtnClassName;
 
+    // Benutzerstatus
     this.active = active;
     this.active ? this.activate() : this.deactivate();
 
-    this.title = title;
-
-    this.container = document.createElement('div');
-    this.container.className = this.className;
-    this.userTitle = document.createElement('h2');
-    this.reload();
-
-    this.userNavBtn.innerHTML = this.title;
+    // füge Elemente zum Dom hinzu
     this.container.append(this.userTitle);
     this.userNavigation.append(this.userNavBtn);
+
+    // To-Do-Liste erstellen
     this.noteList = new NoteList(this.container, this.title);
+
+    //  Button-Ereignis-Listener
     this.userNavBtn.addEventListener('click', () => {
       this.reload().userNavBtnActivate();
     });
