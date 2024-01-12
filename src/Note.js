@@ -1,3 +1,5 @@
+import Popup from './Popup.js';
+
 class Note {
   constructor(parent, name = '', done = '') {
     this.parent = parent;
@@ -5,48 +7,36 @@ class Note {
     this._done = done;
     this.item = document.createElement('div');
     this.buttonContainer = document.createElement('div');
-    this.doneButton = document.createElement('button');
-    this.editButton = document.createElement('button');
-    this.saveButton = document.createElement('button');
-    this.deleteButton = document.createElement('button');
     this.input = document.createElement('input');
     this.input.disabled = true;
     this.writeField = document.createElement('span');
+    this.popup = new Popup(this.buttonContainer);
     // add a class
     this.item.classList.add('note', 'box');
     this.input.classList.add('inputStyle');
     this.buttonContainer.classList.add('container__btn');
-    this.editButton.classList.add('note__edit__btn', 'btn');
-    this.saveButton.classList.add('note__save__btn', 'btn');
-    this.doneButton.classList.add('note__done__btn', 'btn');
-    this.deleteButton.classList.add('note__remove__btn', 'btn');
-    this.writeField.classList.add('note__write');
+    this.buttonContainer.append(this.popup.container);
 
-    this.doneButton.textContent = 'Resolve';
-    this.editButton.textContent = 'Edit';
-    this.saveButton.textContent = 'Save';
-    this.deleteButton.textContent = 'Remove';
+    this.writeField.classList.add('note__write');
 
     // add to parent
     this.parent.listContainer.append(this.item);
     this.item.append(this.input);
     this.item.append(this.writeField);
     this.item.append(this.buttonContainer);
-    this.buttonContainer.append(this.editButton);
-    this.buttonContainer.append(this.saveButton);
-    this.buttonContainer.append(this.doneButton);
-    this.buttonContainer.append(this.deleteButton);
-    this.deleteButton.addEventListener('click', () => this.delete());
-    this.doneButton.addEventListener('click', () => {
+
+    this.popup.delete.addEventListener('click', () => this.delete());
+
+    this.popup.done.addEventListener('click', () => {
       this.done = !this.done;
       this.modifyLS();
     });
 
-    this.editButton.addEventListener('click', () => {
+    this.popup.edit.addEventListener('click', () => {
       this.feldActivate();
     });
 
-    this.saveButton.addEventListener('click', () => {
+    this.popup.save.addEventListener('click', () => {
       this.feldDEActivate();
       this.modifyLS();
     });
@@ -63,6 +53,9 @@ class Note {
     this._done = item;
     this.feldDEActivate();
     this.noteStatus();
+    this._done
+      ? (this.popup.done.innerHTML = 'Cancel')
+      : (this.popup.done.innerHTML = 'Resolve');
   }
 
   get done() {
