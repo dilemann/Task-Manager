@@ -2,12 +2,15 @@ import NoteList from './NoteList.js';
 
 class User {
   constructor(parent, title, active) {
+    // this.parentContainer = container;
+
     this.className = 'user-container';
     this.activeBtnClassName = 'user__btn_active';
     this.defaultBtnClassName = 'user__btn btn';
 
     this.userNavBtn = document.createElement('button');
     this.userNavBtn.className = this.defaultBtnClassName;
+
     this.active = active;
     this.active ? this.activate() : this.deactivate();
 
@@ -16,13 +19,13 @@ class User {
     this.parent = parent;
     this.container = document.createElement('div');
     this.container.className = this.className;
+    this.userTitle = document.createElement('h2');
     this.reload();
 
     this.userNavBtn.innerHTML = this.title;
-
+    this.container.append(this.userTitle);
     this.parent.nav.append(this.userNavBtn);
     this.noteList = new NoteList(this.container, this.title);
-    this.parent.header.innerHTML = this.title;
     this.userNavBtn.addEventListener('click', () => {
       this.reload().userNavBtnActivate();
     });
@@ -37,7 +40,7 @@ class User {
     }
 
     this.parent.container.append(this.container);
-    this.parent.header.innerHTML = this.title;
+    this.userTitle.innerHTML = this.title;
 
     return this;
   }

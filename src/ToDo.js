@@ -11,7 +11,6 @@ class ToDo {
     this.container = document.createElement('div');
     this.wrapperNav = document.createElement('div');
     this.nav = document.createElement('nav');
-    this.header = document.createElement('h2');
 
     // füge Elementen Stile hinzu
     this.container.classList.add('container');
@@ -19,7 +18,6 @@ class ToDo {
 
     // füge Elemente zum Dom hinzu
     this.wrapperNav.append(this.nav);
-    this.wrapperNav.append(this.header);
     this.container.append(this.wrapperNav);
     this.parent.append(this.container);
 
@@ -59,7 +57,7 @@ class ToDo {
       const userToRemove = this.userList[indexOfUserToRemove];
       userToRemove.userNavBtn.remove();
       userToRemove.container.remove();
-      this.header.innerHTML = '';
+      // this.userTitle.innerHTML = '';
 
       this.userList.splice(indexOfUserToRemove, 1);
       needToSave = true;
