@@ -10,6 +10,7 @@
     "import/extensions": "off",
     "operator-linebreak": "off",
     "class-methods-use-this": "warn",
-    "no-unused-expressions": "warn"
+    "no-unused-expressions": "warn",
+    "object-curly-newline": "warn"
   }
 }
