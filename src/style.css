@@ -217,3 +217,114 @@ body {
     align-items: flex-start;
     padding: 10px;
 }
+
+
+
+.popup-nav-container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    margin-right: 20px;
+}
+
+.popup-circle {
+    height: 10px;
+    width: 10px;
+    background-color: rgb(107, 131, 175);
+    border-radius: 50%;
+    transition: background-color 1s;
+
+}
+
+.popup-nav-container:hover .popup-circle {
+    background-color: #ff6600;
+    cursor: pointer;
+}
+
+.popup-modal {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s, transform 0.8s;
+    z-index: 5;
+}
+
+.popup-modal.show-modal {
+    display: block;
+    opacity: 1;
+    transform: translateX(-81%) translateY(20px);
+}
+
+.popup-modal p {
+    margin: 0;
+    padding: 5px 120px 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.popup-modal p:hover {
+    background-color: #e5e5e5;
+
+
+}
+
+.popup-modal .done:hover {
+    color: rgb(1, 188, 1);
+}
+
+.popup-modal .save:hover {
+    color: rgb(51, 128, 251);
+}
+
+.popup-modal .edit:hover {
+    color: rgb(255, 183, 48);
+}
+
+.popup-modal .delete:hover {
+    color: red;
+}
+
+
+.note__edit__btn {
+    background-color: rgb(244, 164, 17);
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.note__edit__btn:hover {
+    background-color: rgb(183, 125, 18);
+
+}
+
+
+
+.note__remove__btn {
+
+    background-color: red;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+.note__remove__btn:hover {
+    background-color: rgb(180, 44, 29);
+
+}

@@ -91,6 +91,7 @@ class NoteList {
     this._noteList.forEach((element) => {
       const { name, done } = element;
       const newNote = new Note(this, name, done);
+      newNote.done = done;
       newNote.id = element.id;
     });
   }

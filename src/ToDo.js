@@ -57,7 +57,6 @@ class ToDo {
       const userToRemove = this.userList[indexOfUserToRemove];
       userToRemove.userNavBtn.remove();
       userToRemove.container.remove();
-      // this.userTitle.innerHTML = '';
 
       this.userList.splice(indexOfUserToRemove, 1);
       needToSave = true;
