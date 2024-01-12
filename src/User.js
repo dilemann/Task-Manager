@@ -24,8 +24,7 @@ class User {
     this.noteList = new NoteList(this.container, this.title);
     this.parent.header.innerHTML = this.title;
     this.userNavBtn.addEventListener('click', () => {
-      this.reload();
-      this.userNavBtnActivate();
+      this.reload().userNavBtnActivate();
     });
   }
   /// nav
@@ -44,11 +43,9 @@ class User {
   }
 
   userNavBtnActivate() {
-    document.querySelectorAll('.user__btn').forEach((btn) => {
-      if (this.userNavBtn === btn) btn.classList.add(this.activeBtnClassName);
-      else btn.classList.remove(this.activeBtnClassName);
+    this.parent.userList.forEach((user) => {
+      user === this ? user.activate() : user.deactivate();
     });
-    this.active = true;
     this.parent.saveNavList();
   }
 

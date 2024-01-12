@@ -9,6 +9,7 @@
     "comma-dangle": "off",
     "import/extensions": "off",
     "operator-linebreak": "off",
-    "class-methods-use-this": "warn"
+    "class-methods-use-this": "warn",
+    "no-unused-expressions": "warn"
   }
 }

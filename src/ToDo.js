@@ -50,11 +50,10 @@ class ToDo {
   removeUser() {
     if (this.userList.length === 0) return;
 
-    console.log(this.userList);
     const indexOfUserToRemove = this.userList.findIndex(
       (user) => user.active === true
     );
-    console.log(indexOfUserToRemove);
+
     let needToSave = false;
     if (indexOfUserToRemove !== -1) {
       const userToRemove = this.userList[indexOfUserToRemove];
@@ -82,8 +81,7 @@ class ToDo {
     this._currentUser = user;
     const activeUser = this.userList.find((storedUser) => storedUser.active);
     if (activeUser) activeUser.deactivate();
-    this.currentUser.activate();
-    this.currentUser.reload();
+    this.currentUser.reload().activate();
   }
 
   /**
@@ -105,14 +103,10 @@ class ToDo {
     let lastActiveUser = null;
 
     list.forEach(({ user }) => {
-      console.log(user.active);
       const newUser = new User(this, user.title, user.active);
       this.userList.push(newUser);
-      if (user.active) {
-        lastActiveUser = newUser;
-      }
+      if (user.active) lastActiveUser = newUser;
     });
-    console.log(this.userList);
 
     if (lastActiveUser) lastActiveUser.reload();
   }
