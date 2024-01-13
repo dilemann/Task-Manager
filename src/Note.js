@@ -36,7 +36,7 @@ class Note {
       this.feldActivate();
     });
 
-    this.popup.save.addEventListener('click', () => {
+    this.input.addEventListener('mouseleave', () => {
       this.feldDEActivate();
       this.modifyLS();
     });
@@ -70,6 +70,7 @@ class Note {
     this.done = false;
     this.input.disabled = false;
     this.item.classList.add('note_border');
+    this.input.focus();
   }
 
   /**

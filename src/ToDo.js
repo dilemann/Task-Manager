@@ -7,7 +7,6 @@ class ToDo {
     this.userList = [];
     this.parent = parent;
 
-    // erstelle Elemente
     this.container = document.createElement('div');
     this.wrapperNav = document.createElement('div');
     this.nav = document.createElement('nav');
