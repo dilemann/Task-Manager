@@ -9,7 +9,6 @@ class Note {
     this.buttonContainer = document.createElement('div');
     this.input = document.createElement('input');
     this.input.disabled = true;
-    this.writeField = document.createElement('span');
     this.popup = new Popup(this.buttonContainer);
     // add a class
     this.item.classList.add('note', 'box');
@@ -17,12 +16,10 @@ class Note {
     this.buttonContainer.classList.add('container__btn');
     this.buttonContainer.append(this.popup.container);
 
-    this.writeField.classList.add('note__write');
-
     // add to parent
     this.parent.listContainer.append(this.item);
     this.item.append(this.input);
-    this.item.append(this.writeField);
+
     this.item.append(this.buttonContainer);
 
     this.popup.delete.addEventListener('click', () => this.delete());
