@@ -2,7 +2,7 @@ import Note from './Note.js';
 
 class NoteList {
   constructor(parent, title) {
-    this._noteList = [];
+    this.noteList = [];
     this.listContainer = document.createElement('div');
     this.listContainer.classList.add('cc');
     this.form = document.createElement('form');
@@ -30,8 +30,7 @@ class NoteList {
       this.addNote(this.input.value);
       this.form.reset();
     });
-    this.noteInit();
-    this.checkEmpty();
+    this.initialise();
   }
 
   /**
@@ -40,7 +39,7 @@ class NoteList {
    */
   getNewId() {
     let max = 0;
-    this._noteList.forEach((note) => {
+    this.noteList.forEach((note) => {
       if (note.id > max) max = note.id;
     });
     return max + 1;
@@ -53,7 +52,7 @@ class NoteList {
   addNote(item) {
     const newNote = new Note(this, item);
     newNote.id = this.getNewId();
-    this._noteList.push(newNote);
+    this.noteList.push(newNote);
     this.saveLS();
   }
 
@@ -62,22 +61,14 @@ class NoteList {
    *
    */
   saveLS() {
-    if (!this._noteList.length) {
-      localStorage.removeItem(this.title);
-      return;
-    }
-    const list = [];
-    this._noteList.forEach((element) => {
-      const obj = {
-        id: element.id,
-        name: element.name,
-        done: element.done,
-      };
-      list.push(obj);
-    });
-    localStorage.setItem(this.title, JSON.stringify(list));
-
-    this.checkEmpty();
+    localStorage.setItem(
+      this.title,
+      JSON.stringify(
+        this.noteList.map((item) => ({
+          note: item.toJSON(item.id),
+        }))
+      )
+    );
   }
 
   /**
@@ -85,15 +76,17 @@ class NoteList {
    *
    */
 
-  noteInit() {
+  initialise() {
     if (!localStorage.getItem(this.title)) return;
-    this._noteList = JSON.parse(localStorage.getItem(this.title));
-    this._noteList.forEach((element) => {
-      const { name, done } = element;
-      const newNote = new Note(this, name, done);
-      newNote.done = done;
-      newNote.id = element.id;
+    const list = this.getNoteList();
+
+    list.forEach(({ note }) => {
+      const newNote = new Note(this, note.name, note.done);
+      newNote.id = note.id;
+      this.noteList.push(newNote);
     });
+
+    this.checkEmpty();
   }
 
   /**
@@ -102,12 +95,16 @@ class NoteList {
    */
 
   checkEmpty() {
-    if (this._noteList.length === 0) {
+    if (this.noteList.length === 0) {
       this.empty = document.createElement('div');
       this.empty.classList.add('empty__list', 'box');
       this.listContainer.append(this.empty);
       this.empty.innerHTML = 'Empty page';
     } else if (this.empty) this.empty.remove();
+  }
+
+  getNoteList() {
+    return JSON.parse(localStorage.getItem(this.title));
   }
 }
 

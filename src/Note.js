@@ -31,11 +31,7 @@ class Note {
 
     this.popup.edit.addEventListener('click', () => {
       this.feldActivate();
-    });
-
-    this.input.addEventListener('mouseleave', () => {
-      this.feldDEActivate();
-      this.modifyLS();
+      this.edit();
     });
 
     this.input.value = this.name;
@@ -48,11 +44,8 @@ class Note {
    */
   set done(item) {
     this._done = item;
-    this.feldDEActivate();
+    this.feldDeactivate();
     this.noteStatus();
-    this._done
-      ? (this.popup.done.innerHTML = 'Cancel')
-      : (this.popup.done.innerHTML = 'Resolve');
   }
 
   get done() {
@@ -73,7 +66,7 @@ class Note {
   /**
    *Deaktiviert das Feld zum Bearbeiten einer Notiz.
    */
-  feldDEActivate() {
+  feldDeactivate() {
     this.input.disabled = true;
     this.item.classList.remove('note_border');
   }
@@ -82,38 +75,53 @@ class Note {
    * Aktualisiert die Farbe der Notiz in Abhängigkeit von ihrer Fertigstellung.
    */
   noteStatus() {
-    if (this.done) this.item.classList.add('note_active');
-    else this.item.classList.remove('note_active');
+    if (this.done) {
+      this.item.classList.add('note_active');
+      this.popup.done.innerHTML = 'Cancel';
+    } else {
+      this.item.classList.remove('note_active');
+      this.popup.done.innerHTML = 'Resolve';
+    }
   }
 
   /**
    * Ändert den Lokalspeicher nach dem Ändern einer Notiz.
    */
   modifyLS() {
-    if (!localStorage.getItem(this.parent.title)) return;
-    const list = JSON.parse(localStorage.getItem(this.parent.title));
-    list.forEach((element) => {
-      if (element.id === this.id) {
-        element.name = this.input.value;
-        element.done = this._done;
+    this.parent.noteList.forEach((note) => {
+      if (note.id === this.id) {
+        note.name = this.input.value;
+        note.done = this.done;
       }
     });
-    localStorage.setItem(this.parent.title, JSON.stringify(list));
+    this.parent.saveLS();
+  }
+
+  edit() {
+    if (this.input.disabled === false) {
+      const mouseLeaveHandler = () => {
+        this.feldDeactivate();
+        this.modifyLS();
+        this.input.removeEventListener('mouseleave', mouseLeaveHandler);
+      };
+
+      this.input.addEventListener('mouseleave', mouseLeaveHandler);
+    }
   }
 
   /**
    * die Notiz wird gelöscht
    */
   delete() {
-    this.parent._noteList.splice(this.id - 1, 1);
-    this.parent._noteList.forEach((element) => (element.id = 0));
-    this.parent._noteList.forEach(
-      (element) => (element.id = this.parent.getNewId())
-    );
+    this.parent.noteList.splice(this.id - 1, 1);
+    this.parent.noteList.forEach((note) => (note.id = this.parent.getNewId()));
     this.parent.saveLS();
     this.item.remove();
-    this.parent.saveLS();
     this.parent.checkEmpty();
+  }
+
+  toJSON(id) {
+    return { name: this.name, done: this.done, id };
   }
 }
 
