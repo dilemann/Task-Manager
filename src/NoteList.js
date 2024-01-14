@@ -31,6 +31,7 @@ class NoteList {
       this.form.reset();
     });
     this.initialise();
+    this.checkEmpty();
   }
 
   /**
@@ -85,8 +86,6 @@ class NoteList {
       newNote.id = note.id;
       this.noteList.push(newNote);
     });
-
-    this.checkEmpty();
   }
 
   /**
