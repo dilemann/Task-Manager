@@ -27,13 +27,13 @@ class Note {
     this.popup.done.addEventListener('click', () => {
       this.done = !this.done;
       this.feldDeactivate();
-      this.changeStatus();
+      this.updateNote();
     });
 
     this.popup.edit.addEventListener('click', () => {
       this.feldActivate();
+      this.noteStatus();
       this.editAndSave();
-      this.changeStatus();
     });
 
     this.input.value = this.name;
@@ -73,50 +73,30 @@ class Note {
   }
 
   editAndSave() {
-    // if (this.input.disabled === false) {+
-    console.log(this.input.value);
     const mouseLeaveHandler = () => {
       this.feldDeactivate();
+      this.updateNote();
       this.input.removeEventListener('mouseleave', mouseLeaveHandler);
     };
 
     this.input.addEventListener('mouseleave', mouseLeaveHandler);
-    console.log(this.input.value);
-    this.changeStatus();
   }
 
   /**
    * die Notiz wird gelöscht
    */
   delete() {
-    console.log(this.input.value);
     const removeNote = new CustomEvent(UserEvent.removeNote, {
-      detail: { noteItem: this.input.value },
+      detail: { note: this },
     });
     document.dispatchEvent(removeNote);
-
-    // console.log(this.id);
-    // console.log(this.parent.noteList);
-    // if (this.noteList.length === 0) return;
-    // this.parent.noteList.splice(this.id - 1, 1);
-    // this.parent.noteList.forEach((element) => (element.id = 0));
-    // this.parent.noteList.forEach((note) => (note.id = this.parent.getNewId()));
-    // this.parent.saveLS();
-    // this.item.remove();
-    // this.parent.checkEmpty();
-
-    // if (this.userList.length === 0) return;
-
-    // const indexOfUserToRemove = this.userList.findIndex(
-    //   (user) => user.active === true
-    // );
   }
 
-  changeStatus() {
-    const statusNote = new CustomEvent(UserEvent.statusNote, {
-      detail: { noteItem: this.input.value, done: this.done },
+  updateNote() {
+    const updateNote = new CustomEvent(UserEvent.updateNote, {
+      detail: { note: this, noteItem: this.input.value, done: this.done },
     });
-    document.dispatchEvent(statusNote);
+    document.dispatchEvent(updateNote);
     this.noteStatus();
   }
 

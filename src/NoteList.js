@@ -42,14 +42,14 @@ class NoteList {
 
     document.addEventListener(UserEvent.removeNote, (event) => {
       const indexOfNoteToRemove = this.noteList.findIndex(
-        (note) => note.name === event.detail.noteItem
+        (note) => note === event.detail.note
       );
       if (indexOfNoteToRemove >= 0) this.removeNote(indexOfNoteToRemove);
     });
 
-    document.addEventListener(UserEvent.statusNote, (event) => {
+    document.addEventListener(UserEvent.updateNote, (event) => {
       this.noteList.forEach((note) => {
-        if (note.name === event.detail.noteItem) {
+        if (note === event.detail.note) {
           note.name = event.detail.noteItem;
           note.done = event.detail.done;
           this.saveLS();

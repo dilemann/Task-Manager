@@ -36,6 +36,7 @@ class TaskManager {
         (user) => user.title === event.detail.userTitle
       );
       this.loadUserData(this.currentUser.title);
+
       this.saveNavList();
     });
 
@@ -138,12 +139,14 @@ class TaskManager {
   initialise() {
     if (!localStorage.getItem('user-list')) return;
     const list = this.getNavList();
+    let activeUser;
 
     list.forEach(({ user }) => {
       // create newUser
       const newUser = this.addNewUser(user.title);
-      if (user.active) newUser.activate();
+      if (user.active) activeUser = newUser;
     });
+    activeUser.activate();
   }
 
   saveNavList() {

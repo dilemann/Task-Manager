@@ -3,7 +3,7 @@ const UserEvent = {
   userActivated: 'userActivated',
   removeUser: 'removeUser',
   removeNote: 'removeNote',
-  statusNote: 'statusNote',
+  updateNote: 'updateNote',
 };
 
 export default UserEvent;
