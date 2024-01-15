@@ -1,4 +1,5 @@
 import Note from './Note.js';
+import UserEvent from './enums/user-event.enum.js';
 
 class NoteList {
   constructor(parent, title) {
@@ -30,6 +31,12 @@ class NoteList {
       this.addNote(this.input.value);
       this.form.reset();
     });
+    // verfolgt das Ereignis der Benutzerlöschung. Wenn ein Benutzer gelöscht wird,
+    // werden seine Notizen aus dem Speicher des Browsers gelöscht
+    document.addEventListener(UserEvent.removeUser, (event) => {
+      localStorage.removeItem(event.detail.userTitle);
+      this.noteList = [];
+    });
     this.initialise();
     this.checkEmpty();
   }
@@ -55,6 +62,7 @@ class NoteList {
     newNote.id = this.getNewId();
     this.noteList.push(newNote);
     this.saveLS();
+    this.checkEmpty();
   }
 
   /**

@@ -113,7 +113,10 @@ class Note {
    * die Notiz wird gelöscht
    */
   delete() {
+    console.log(this.id);
+    console.log(this.parent.noteList);
     this.parent.noteList.splice(this.id - 1, 1);
+    console.log(this.parent.noteList);
     this.parent.noteList.forEach((note) => (note.id = this.parent.getNewId()));
     this.parent.saveLS();
     this.item.remove();

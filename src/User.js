@@ -1,15 +1,8 @@
 import NoteList from './NoteList.js';
+import UserEvent from './enums/user-event.enum.js';
 
 class User {
-  constructor({ container, nav, userList, saveNavList }, title, active) {
-    // Komponenten der übergeordneten Klasse
-    this.parentContainer = container;
-    this.userNavigation = nav;
-    this.userList = userList;
-
-    // Methoden der übergeordneten Klasse
-    this.saveNavList = saveNavList;
-
+  constructor(title, active) {
     // Abruf des Benutzernamens
     this.title = title;
 
@@ -23,7 +16,6 @@ class User {
     this.userTitle = document.createElement('h2');
 
     // Containerverladung
-    this.reload();
 
     // Erstellen einer Benutzerschaltfläche für die Navigation
     this.userNavBtn = document.createElement('button');
@@ -34,46 +26,41 @@ class User {
     this.userNavBtn.className = this.defaultBtnClassName;
 
     // Benutzerstatus
-    this.active = active;
-    this.active ? this.activate() : this.deactivate();
+    active ? this.activate() : this.deactivate();
 
     // füge Elemente zum Dom hinzu
     this.container.append(this.userTitle);
-    this.userNavigation.append(this.userNavBtn);
 
     // To-Do-Liste erstellen
     this.noteList = new NoteList(this.container, this.title);
 
-    //  Button-Ereignis-Listener
+    // wenn Sie das Ereignis "deactivateActiveUser"
+    // lesen, ändert der aktive Benutzer seinen Status auf inaktiv.
+    document.addEventListener(UserEvent.deactivateActiveUser, () => {
+      if (this.active) this.deactivate();
+    });
+
     this.userNavBtn.addEventListener('click', () => {
-      this.reload().userNavBtnActivate();
+      this.activate();
     });
   }
   /// nav
 
-  reload() {
-    const previousContainer = document.querySelector(`.${this.className}`);
-
-    if (previousContainer) {
-      previousContainer.remove();
-    }
-
-    this.parentContainer.append(this.container);
-    this.userTitle.innerHTML = this.title;
-
-    return this;
-  }
-
-  userNavBtnActivate() {
-    this.userList.forEach((user) => {
-      user === this ? user.activate() : user.deactivate();
-    });
-    this.saveNavList();
-  }
-
   activate() {
+    // Event-Erstellung  "deactivateActiveUser"
+    const deactivateActiveUser = new Event(UserEvent.deactivateActiveUser);
+    // Senden Sie das erstellte Ereignis an das Dokument
+    document.dispatchEvent(deactivateActiveUser);
+    // nachdem der Ereignis-Listener das Signal ausgelöst und das "deactivate()"
+    // des Benutzers mit dem Flag "active=true" ausgeführt hat, dann wird die :
     this.active = true;
     this.userNavBtn.classList.add(this.activeBtnClassName);
+    this.userTitle.innerHTML = this.title;
+    // Event-Erstellung  "userActivated"
+    const userActivated = new CustomEvent(UserEvent.userActivated, {
+      detail: { userTitle: this.title },
+    });
+    document.dispatchEvent(userActivated);
   }
 
   deactivate() {
