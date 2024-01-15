@@ -4,6 +4,7 @@ import UserEvent from './enums/user-event.enum.js';
 class NoteList {
   constructor(parent, title) {
     this.noteList = [];
+    // this.currentNote = undefined;
     this.listContainer = document.createElement('div');
     this.listContainer.classList.add('cc');
     this.form = document.createElement('form');
@@ -28,7 +29,8 @@ class NoteList {
     this.parent.append(this.listContainer);
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
-      this.addNote(this.input.value);
+      this.addAndSaveNote(false, this.input.value);
+
       this.form.reset();
     });
     // verfolgt das Ereignis der Benutzerlöschung. Wenn ein Benutzer gelöscht wird,
@@ -37,30 +39,54 @@ class NoteList {
       localStorage.removeItem(event.detail.userTitle);
       this.noteList = [];
     });
+
+    document.addEventListener(UserEvent.removeNote, (event) => {
+      const indexOfNoteToRemove = this.noteList.findIndex(
+        (note) => note.name === event.detail.noteItem
+      );
+      if (indexOfNoteToRemove >= 0) this.removeNote(indexOfNoteToRemove);
+    });
+
+    document.addEventListener(UserEvent.statusNote, (event) => {
+      this.noteList.forEach((note) => {
+        if (note.name === event.detail.noteItem) {
+          note.name = event.detail.noteItem;
+          note.done = event.detail.done;
+          this.saveLS();
+        }
+      });
+    });
+
     this.initialise();
     this.checkEmpty();
-  }
-
-  /**
-   * gibt die Identifikationsnummer der Noten zurück
-   * @returns
-   */
-  getNewId() {
-    let max = 0;
-    this.noteList.forEach((note) => {
-      if (note.id > max) max = note.id;
-    });
-    return max + 1;
   }
 
   /**
    * Erstellt eine neue Notiz mit dem angegebenen Textinhalt.
    * @param {string} item - Der Textinhalt der neuen Notiz.
    */
-  addNote(item) {
-    const newNote = new Note(this, item);
-    newNote.id = this.getNewId();
+  addNote(done, item) {
+    const newNote = new Note(done, item);
     this.noteList.push(newNote);
+    this.listContainer.append(newNote.item);
+    this.checkEmpty();
+  }
+
+  addAndSaveNote(done, item) {
+    console.log(this.noteList);
+    const foundDuplicate = this.noteList.find((note) => note.name === item);
+    if (foundDuplicate) {
+      alert('Eine solche Notiz wurde früher erstellt!');
+      return;
+    }
+    this.addNote(done, item);
+    this.saveLS();
+  }
+
+  removeNote(index) {
+    const noteToRemove = this.noteList[index];
+    noteToRemove.item.remove();
+    this.noteList.splice(index, 1);
     this.saveLS();
     this.checkEmpty();
   }
@@ -74,7 +100,7 @@ class NoteList {
       this.title,
       JSON.stringify(
         this.noteList.map((item) => ({
-          note: item.toJSON(item.id),
+          note: item.toJSON(),
         }))
       )
     );
@@ -90,9 +116,7 @@ class NoteList {
     const list = this.getNoteList();
 
     list.forEach(({ note }) => {
-      const newNote = new Note(this, note.name, note.done);
-      newNote.id = note.id;
-      this.noteList.push(newNote);
+      this.addNote(note.done, note.name);
     });
   }
 

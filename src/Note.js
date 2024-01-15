@@ -1,10 +1,10 @@
 import Popup from './Popup.js';
+import UserEvent from './enums/user-event.enum.js';
 
 class Note {
-  constructor(parent, name = '', done = '') {
-    this.parent = parent;
+  constructor(done, name = '') {
     this.name = name;
-    this._done = done;
+    this.done = done;
     this.item = document.createElement('div');
     this.buttonContainer = document.createElement('div');
     this.input = document.createElement('input');
@@ -17,7 +17,7 @@ class Note {
     this.buttonContainer.append(this.popup.container);
 
     // add to parent
-    this.parent.listContainer.append(this.item);
+    // this.parent.listContainer.append(this.item);
     this.item.append(this.input);
 
     this.item.append(this.buttonContainer);
@@ -26,30 +26,18 @@ class Note {
 
     this.popup.done.addEventListener('click', () => {
       this.done = !this.done;
-      this.modifyLS();
+      this.feldDeactivate();
+      this.changeStatus();
     });
 
     this.popup.edit.addEventListener('click', () => {
       this.feldActivate();
-      this.edit();
+      this.editAndSave();
+      this.changeStatus();
     });
 
     this.input.value = this.name;
     this.noteStatus();
-  }
-
-  /**
-   *  Liest oder setzt den Fertigstellungsstatus der Notiz.
-   * @type {boolean}
-   */
-  set done(item) {
-    this._done = item;
-    this.feldDeactivate();
-    this.noteStatus();
-  }
-
-  get done() {
-    return this._done;
   }
 
   /**
@@ -84,47 +72,56 @@ class Note {
     }
   }
 
-  /**
-   * Ändert den Lokalspeicher nach dem Ändern einer Notiz.
-   */
-  modifyLS() {
-    this.parent.noteList.forEach((note) => {
-      if (note.id === this.id) {
-        note.name = this.input.value;
-        note.done = this.done;
-      }
-    });
-    this.parent.saveLS();
-  }
+  editAndSave() {
+    // if (this.input.disabled === false) {+
+    console.log(this.input.value);
+    const mouseLeaveHandler = () => {
+      this.feldDeactivate();
+      this.input.removeEventListener('mouseleave', mouseLeaveHandler);
+    };
 
-  edit() {
-    if (this.input.disabled === false) {
-      const mouseLeaveHandler = () => {
-        this.feldDeactivate();
-        this.modifyLS();
-        this.input.removeEventListener('mouseleave', mouseLeaveHandler);
-      };
-
-      this.input.addEventListener('mouseleave', mouseLeaveHandler);
-    }
+    this.input.addEventListener('mouseleave', mouseLeaveHandler);
+    console.log(this.input.value);
+    this.changeStatus();
   }
 
   /**
    * die Notiz wird gelöscht
    */
   delete() {
-    console.log(this.id);
-    console.log(this.parent.noteList);
-    this.parent.noteList.splice(this.id - 1, 1);
-    console.log(this.parent.noteList);
-    this.parent.noteList.forEach((note) => (note.id = this.parent.getNewId()));
-    this.parent.saveLS();
-    this.item.remove();
-    this.parent.checkEmpty();
+    console.log(this.input.value);
+    const removeNote = new CustomEvent(UserEvent.removeNote, {
+      detail: { noteItem: this.input.value },
+    });
+    document.dispatchEvent(removeNote);
+
+    // console.log(this.id);
+    // console.log(this.parent.noteList);
+    // if (this.noteList.length === 0) return;
+    // this.parent.noteList.splice(this.id - 1, 1);
+    // this.parent.noteList.forEach((element) => (element.id = 0));
+    // this.parent.noteList.forEach((note) => (note.id = this.parent.getNewId()));
+    // this.parent.saveLS();
+    // this.item.remove();
+    // this.parent.checkEmpty();
+
+    // if (this.userList.length === 0) return;
+
+    // const indexOfUserToRemove = this.userList.findIndex(
+    //   (user) => user.active === true
+    // );
   }
 
-  toJSON(id) {
-    return { name: this.name, done: this.done, id };
+  changeStatus() {
+    const statusNote = new CustomEvent(UserEvent.statusNote, {
+      detail: { noteItem: this.input.value, done: this.done },
+    });
+    document.dispatchEvent(statusNote);
+    this.noteStatus();
+  }
+
+  toJSON() {
+    return { name: this.name, done: this.done };
   }
 }
 
