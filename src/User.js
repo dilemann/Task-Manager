@@ -14,6 +14,7 @@ class User {
     // Erstellung von Containern und Kopfzeilen
     this.container = document.createElement('div');
     this.userTitle = document.createElement('h2');
+    this.userTitle.style.textAlign = 'left';
 
     // Containerverladung
 
@@ -55,7 +56,7 @@ class User {
     // des Benutzers mit dem Flag "active=true" ausgeführt hat, dann wird die :
     this.active = true;
     this.userNavBtn.classList.add(this.activeBtnClassName);
-    this.userTitle.innerHTML = this.title;
+    this.userTitle.innerHTML = `User: ${this.title}`;
     // Event-Erstellung  "userActivated"
     const userActivated = new CustomEvent(UserEvent.userActivated, {
       detail: { userTitle: this.title },

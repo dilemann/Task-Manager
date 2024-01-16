@@ -65,8 +65,10 @@ class Note {
   noteStatus() {
     if (this.done) {
       this.item.classList.add('note_active');
+      this.input.style.textDecoration = 'line-through';
       this.popup.done.innerHTML = 'Cancel';
     } else {
+      this.input.style.textDecoration = 'none';
       this.item.classList.remove('note_active');
       this.popup.done.innerHTML = 'Resolve';
     }

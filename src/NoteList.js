@@ -128,7 +128,7 @@ class NoteList {
   checkEmpty() {
     if (this.noteList.length === 0) {
       this.empty = document.createElement('div');
-      this.empty.classList.add('empty__list', 'box');
+      this.empty.classList.add('empty__list');
       this.listContainer.append(this.empty);
       this.empty.innerHTML = 'Empty page';
     } else if (this.empty) this.empty.remove();
