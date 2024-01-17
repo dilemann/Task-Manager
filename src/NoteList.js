@@ -52,8 +52,6 @@ class NoteList {
       if (indexOfNoteToRemove >= 0) {
         this.removeNote(indexOfNoteToRemove);
         this.infoMessage.showMessage('Note: successfully deleted');
-      } else {
-        this.infoMessage.showMessage('Note: delete problem').showWarningStyle();
       }
     });
 
@@ -72,10 +70,6 @@ class NoteList {
           note.name = event.detail.noteItem;
           this.saveLS();
           this.infoMessage.showMessage('Note: successfully updated');
-        } else {
-          this.infoMessage
-            .showMessage('Note: update problem')
-            .showWarningStyle();
         }
       });
     });
@@ -96,10 +90,13 @@ class NoteList {
   }
 
   addAndSaveNote(done, item) {
-    console.log(this.noteList);
     const foundDuplicate = this.noteList.find((note) => note.name === item);
     if (foundDuplicate) {
-      alert('Eine solche Notiz wurde früher erstellt!');
+      this.infoMessage.showMessage(
+        'Eine solche Notiz wurde früher erstellt!',
+        'red'
+      );
+
       return;
     }
     this.addNote(done, item);

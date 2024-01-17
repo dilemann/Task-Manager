@@ -1,5 +1,4 @@
 import Popup from './Popup.js';
-import Modal from './Modal.js';
 import UserEvent from './enums/user-event.enum.js';
 
 class Note {
@@ -102,9 +101,6 @@ class Note {
       detail: { note: this, noteItem: this.input.value },
     });
     document.dispatchEvent(updateNote);
-    const modal = new Modal();
-    this.item.append(modal.container);
-    modal.showMessage('Note: successfully updated');
   }
 
   updateNoteStatus() {

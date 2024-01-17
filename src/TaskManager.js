@@ -1,11 +1,12 @@
 import User from './User.js';
 import UserEvent from './enums/user-event.enum.js';
+import Modal from './Modal.js';
 
 class TaskManager {
   constructor() {
     this.currentUser = undefined;
     this.userList = [];
-
+    this.modal = new Modal();
     // Erstelle APP-Container
     const element = document.createElement('div');
     element.className = 'app';
@@ -50,6 +51,11 @@ class TaskManager {
     addUserBtn.addEventListener('click', () => {
       this.addAndSaveUser(prompt('enter User Name:'));
     });
+    // addUserBtn.addEventListener('click', () => {
+    //   this.modal.showInput().then((inputValue) => {
+    //     this.addAndSaveUser(inputValue);
+    //   });
+    // });
     return addUserBtn;
   }
 
@@ -66,11 +72,12 @@ class TaskManager {
   addAndSaveUser(title) {
     const foundDuplicate = this.userList.find((user) => user.title === title);
     if (foundDuplicate) {
-      alert('Same name is forbidden!');
+      this.modal.showMessage('Same name is forbidden!', 'red');
       return;
     }
     this.addNewUser(title).activate();
     this.saveNavList();
+    this.modal.showMessage(`user "${title}" added`);
   }
 
   /**
@@ -122,6 +129,7 @@ class TaskManager {
 
       this.userList.splice(indexOfUserToRemove, 1);
       needToSave = true;
+      this.modal.showMessage(`user "${userToRemove.title}" removed`);
     }
 
     const newСurrentUser = this.userList[this.userList.length - 1];
