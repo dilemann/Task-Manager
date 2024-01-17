@@ -1,4 +1,5 @@
 import Popup from './Popup.js';
+import Modal from './Modal.js';
 import UserEvent from './enums/user-event.enum.js';
 
 class Note {
@@ -27,7 +28,8 @@ class Note {
     this.popup.done.addEventListener('click', () => {
       this.done = !this.done;
       this.feldDeactivate();
-      this.updateNote();
+      this.noteStatus();
+      this.updateNoteStatus();
     });
 
     this.popup.edit.addEventListener('click', () => {
@@ -78,6 +80,7 @@ class Note {
     const mouseLeaveHandler = () => {
       this.feldDeactivate();
       this.updateNote();
+      this.updateNoteStatus();
       this.input.removeEventListener('mouseleave', mouseLeaveHandler);
     };
 
@@ -96,10 +99,19 @@ class Note {
 
   updateNote() {
     const updateNote = new CustomEvent(UserEvent.updateNote, {
-      detail: { note: this, noteItem: this.input.value, done: this.done },
+      detail: { note: this, noteItem: this.input.value },
     });
     document.dispatchEvent(updateNote);
-    this.noteStatus();
+    const modal = new Modal();
+    this.item.append(modal.container);
+    modal.showMessage('Note: successfully updated');
+  }
+
+  updateNoteStatus() {
+    const updateNoteStatus = new CustomEvent(UserEvent.updateNoteStatus, {
+      detail: { note: this },
+    });
+    document.dispatchEvent(updateNoteStatus);
   }
 
   toJSON() {

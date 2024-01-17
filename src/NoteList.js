@@ -1,4 +1,5 @@
 import Note from './Note.js';
+import Modal from './Modal.js';
 import UserEvent from './enums/user-event.enum.js';
 
 class NoteList {
@@ -6,7 +7,7 @@ class NoteList {
     this.noteList = [];
     // this.currentNote = undefined;
     this.listContainer = document.createElement('div');
-    this.listContainer.classList.add('cc');
+    this.listContainer.classList.add('list');
     this.form = document.createElement('form');
     this.input = document.createElement('input');
     this.buttonWrapper = document.createElement('div');
@@ -27,6 +28,10 @@ class NoteList {
     this.form.append(this.buttonWrapper);
     this.parent.append(this.form);
     this.parent.append(this.listContainer);
+
+    // erstellen Dialog-Fenster
+    this.infoMessage = new Modal();
+
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.addAndSaveNote(false, this.input.value);
@@ -44,15 +49,33 @@ class NoteList {
       const indexOfNoteToRemove = this.noteList.findIndex(
         (note) => note === event.detail.note
       );
-      if (indexOfNoteToRemove >= 0) this.removeNote(indexOfNoteToRemove);
+      if (indexOfNoteToRemove >= 0) {
+        this.removeNote(indexOfNoteToRemove);
+        this.infoMessage.showMessage('Note: successfully deleted');
+      } else {
+        this.infoMessage.showMessage('Note: delete problem').showWarningStyle();
+      }
+    });
+
+    document.addEventListener(UserEvent.updateNoteStatus, (event) => {
+      this.noteList.forEach((note) => {
+        if (note === event.detail.note) {
+          note.done = event.detail.note.done;
+          this.saveLS();
+        }
+      });
     });
 
     document.addEventListener(UserEvent.updateNote, (event) => {
       this.noteList.forEach((note) => {
         if (note === event.detail.note) {
           note.name = event.detail.noteItem;
-          note.done = event.detail.done;
           this.saveLS();
+          this.infoMessage.showMessage('Note: successfully updated');
+        } else {
+          this.infoMessage
+            .showMessage('Note: update problem')
+            .showWarningStyle();
         }
       });
     });
