@@ -1,16 +1,23 @@
 import User from './User.js';
 import UserEvent from './enums/user-event.enum.js';
-import Modal from './MessageWindow.js';
+import MessageWindow from './MessageWindow.js';
+import UserInputModal from './UserInputModal.js';
 
 class TaskManager {
   constructor() {
     this.currentUser = undefined;
     this.userList = [];
-    this.infoMessage = new Modal();
+
+    // Stilvariablen erstellen
+    this.containerClassName = 'container';
+    this.appClassName = 'app';
+    this.navClassName = 'nav';
+    this.addBtnClassList = 'action__btn btn';
+    this.removeBtnClassList = 'remove__btn btn';
 
     // Erstelle APP-Container
     const element = document.createElement('div');
-    element.className = 'app';
+    element.className = this.appClassName;
     document.body.append(element);
 
     // Erstelle Buttons für User-Management
@@ -21,13 +28,16 @@ class TaskManager {
 
     // Erstelle Manager Container
     this.container = document.createElement('div');
-    this.container.classList.add('container');
+    this.container.classList.add(this.containerClassName);
     element.append(this.container);
 
     // Erstelle nav Container
     this.nav = document.createElement('nav');
-    this.nav.classList.add('nav');
+    this.nav.classList.add(this.navClassName);
     this.container.append(this.nav);
+
+    // Erstelle Dialog-Fenster
+    this.infoMessage = new MessageWindow();
 
     // Event User-Activate
     document.addEventListener(UserEvent.userActivated, (event) => {
@@ -40,14 +50,20 @@ class TaskManager {
     });
 
     this.initialise();
+    // this.userInputModal = new UserInputModal();
   }
 
   createAddUserButton() {
     const addUserBtn = document.createElement('button');
     addUserBtn.innerHTML = 'Add User';
-    addUserBtn.className = 'action__btn btn';
+    addUserBtn.className = this.addBtnClassList;
     addUserBtn.addEventListener('click', () => {
-      this.addAndSaveUser(prompt('enter User Name:'));
+      const userInputModal = new UserInputModal();
+      userInputModal.okButton.addEventListener('click', () => {
+        if (!userInputModal.input.value) return;
+        this.addAndSaveUser(userInputModal.getValue());
+        userInputModal.container.remove();
+      });
     });
     return addUserBtn;
   }
@@ -55,7 +71,7 @@ class TaskManager {
   createRemoveUserButton() {
     const removeUserBtn = document.createElement('button');
     removeUserBtn.innerHTML = 'Remove User';
-    removeUserBtn.className = 'remove__btn btn';
+    removeUserBtn.className = this.removeBtnClassList;
     removeUserBtn.addEventListener('click', () => {
       this.removeUser();
     });
@@ -136,7 +152,9 @@ class TaskManager {
    * Initialisiert die ToDo-Anwendung.
    */
   initialise() {
-    if (!localStorage.getItem('user-list')) return;
+    const userLocalStorage = localStorage.getItem('user-list');
+    if (!userLocalStorage || userLocalStorage.length < 3) return;
+
     const list = this.getNavList();
     let activeUser;
 

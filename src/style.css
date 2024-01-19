@@ -1,8 +1,8 @@
 * {
     padding: 0;
-    /* margin: 0; */
     border: 0;
 }
+
 
 body {
 
@@ -15,20 +15,92 @@ body {
     color: beige;
     position: relative;
 
-
 }
 
 
+
+/* buttons */
 .btn {
 
     display: flex;
     justify-content: center;
     align-items: center;
     height: 30px;
-    width: 100px;
+    width: 90px;
     color: inherit;
     transition: background-color 1s;
     cursor: pointer;
+}
+
+.action__btn {
+    border-radius: 3px;
+    background-color: rgb(100, 190, 220);
+    display: inline;
+    margin-right: 10px;
+    font-size: 12px;
+
+}
+
+.action__btn:hover {
+    background-color: rgb(5, 164, 217);
+}
+
+.remove__btn {
+    border-radius: 3px;
+    display: inline;
+    background-color: rgb(236, 120, 120);
+    font-size: 12px;
+}
+
+.remove__btn:hover {
+    background-color: rgb(243, 71, 71);
+}
+
+
+.form__btn {
+    cursor: pointer;
+    padding: 5px 15px;
+    color: bisque;
+    display: block;
+    background-color: rgb(100, 190, 220);
+    transition: background-color .5s;
+    border-radius: 5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.form__btn:hover {
+    background-color: rgb(5, 164, 217);
+}
+
+.user__btn {
+
+    background-color: inherit;
+    border: 1px solid rgb(185, 168, 168);
+    border-radius: 4px;
+    transition: background-color .3s;
+    margin: 0 5px 5px 0;
+}
+
+.user__btn:not(.user__btn_active):hover {
+    box-shadow: 0 0 10px 3px rgb(125, 214, 214);
+}
+
+.user__btn_active {
+
+    box-shadow: 0 0 10px 3px rgb(125, 214, 214);
+    color: bisque;
+}
+
+
+
+
+/* containers */
+.container__btn {
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    background-color: inherit;
 }
 
 .box {
@@ -44,20 +116,16 @@ body {
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 }
 
-.container__btn {
-    height: 20px;
-    display: flex;
-    flex-direction: row;
-    background-color: inherit;
-}
 
 
+
+/* note */
 .note_active {
 
     background-color: rgb(91, 143, 89);
 }
 
-.inputStyle {
+.note_textField {
     display: block;
     width: 100%;
     outline: none;
@@ -67,41 +135,15 @@ body {
     color: beige;
 }
 
-
-
-.note_border {
+.boxBorder_active {
 
     box-shadow: 0 0 10px 3px rgb(125, 214, 125);
-
 }
 
 
 
 
-
-.action__btn {
-    border-radius: 3px;
-    background-color: rgb(100, 190, 220);
-    display: inline;
-    margin-right: 10px;
-
-}
-
-.action__btn:hover {
-    background-color: rgb(58, 193, 250);
-}
-
-.remove__btn {
-    border-radius: 3px;
-    display: inline;
-    background-color: rgb(236, 120, 120);
-}
-
-.remove__btn:hover {
-    background-color: rgb(246, 97, 97);
-}
-
-
+/* form */
 .form {
     display: flex;
     flex-direction: row;
@@ -131,37 +173,8 @@ body {
 
 
 
-.form__btn {
-    cursor: pointer;
-    padding: 5px 15px;
-    color: bisque;
-    display: block;
-    background-color: rgb(100, 190, 220);
-    transition: background-color .5s;
-    border-radius: 5px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
 
-.form__btn:hover {
-    background-color: rgb(39, 72, 161);
-}
-
-.user__btn {
-
-    /* color: rgba(11, 118, 207, 0.932); */
-    background-color: inherit;
-    border: 1px solid rgb(185, 168, 168);
-    border-radius: 4px;
-    transition: background-color .3s;
-    margin: 0 5px 5px 0;
-}
-
-.user__btn:not(.user__btn_active):hover {
-    background-color: rgb(100, 190, 220);
-}
-
-
+/* nav */
 .nav {
 
     display: flex;
@@ -170,25 +183,10 @@ body {
     margin-top: 35px;
 }
 
-.user__btn_active {
-
-    background-color: rgb(100, 190, 220);
-    color: bisque;
-}
-
-.empty__list {
-    height: 50vh;
-    align-items: flex-start;
-    padding: 10px;
-    background-color: inherit;
-    border: 1px solid rgb(173, 173, 173);
-    text-align: start;
-    border-radius: 10px;
-
-}
 
 
 
+/* popup */
 .popup__nav-container {
 
     display: flex;
@@ -198,6 +196,7 @@ body {
     position: relative;
     margin-right: 20px;
     height: 100%;
+
 }
 
 .popup__circle {
@@ -227,6 +226,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: opacity 0.3s, transform 0.8s;
     text-align: start;
+
     z-index: 5;
 }
 
@@ -240,7 +240,6 @@ body {
     margin: 0;
     padding: 5px 120px 5px 10px;
     cursor: pointer;
-    font-size: 14px;
     color: #333;
 
     transition: background-color 0.3s, color 0.3s;
@@ -270,36 +269,79 @@ body {
 
 
 
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    /* начальное значение непрозрачности */
-    transition: opacity 0.3s ease;
-    /* добавляем плавное изменение непрозрачности */
-}
 
-.modal-content {
-    background: #fff;
-    padding: 20px;
+/* user-input-modal-window */
+.modal_content {
+    box-shadow: 0 0 10px 0 rgb(125, 214, 214);
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: inherit;
+    padding: 15px 20px;
+    max-width: 220px;
+    border: 1px solid beige;
     border-radius: 5px;
     text-align: center;
+
+}
+
+.modal_content input {
+    padding: 5px;
+    color: inherit;
+    display: block;
+    background-color: inherit;
+    border: 1px solid beige;
+    border-radius: 3px;
+    margin: 10px 0;
+    align-self: center
+}
+
+.modal_content button {
+    color: inherit;
+    min-width: 50px;
+    border-radius: 3px;
+    padding: 3px 0;
+}
+
+.modal_message {
+
+    color: inherit;
+
+}
+
+.modal_ok {
+    background-color: rgb(100, 190, 220);
+    margin-right: 10px;
+}
+
+.modal_cancel {
+    background-color: rgb(236, 120, 120);
+    margin-right: 5px;
+}
+
+.modal_content input:focus {
+    box-shadow: 0 0 10px 0 rgb(125, 214, 214);
+    outline: none;
 }
 
 
 
+
+/* media query */
 @media screen and (max-width: 768px) {
 
     body {
 
         font-size: 10px;
+    }
+
+    div,
+    input,
+    button,
+    p {
+
+        font-size: inherit;
     }
 
     .box {
@@ -318,17 +360,29 @@ body {
     }
 
     .form__btn {
-        font-size: 10px;
+        padding: 2px 7px;
     }
+
+    .note_textField {
+        padding: 5px;
+    }
+
+    .container__btn {
+        height: 17px;
+    }
+
+    .btn {
+        height: 25px;
+        width: 70px;
+        font-size: 10px;
+
+    }
+
 }
 
 
-.modal_message {
 
-    color: inherit;
-
-}
-
+/* animation */
 @keyframes slideIn {
     from {
         top: -100%;

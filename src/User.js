@@ -3,34 +3,27 @@ import UserEvent from './enums/user-event.enum.js';
 
 class User {
   constructor(title, active) {
-    // Abruf des Benutzernamens
     this.title = title;
 
     // Stilvariablen erstellen
     this.className = 'user-container';
     this.activeBtnClassName = 'user__btn_active';
-    this.defaultBtnClassName = 'user__btn btn';
+    this.defaultBtnClassList = 'user__btn btn';
 
     // Erstellung von Containern und Kopfzeilen
     this.container = document.createElement('div');
+    this.container.className = this.className;
     this.userTitle = document.createElement('h2');
     this.userTitle.style.textAlign = 'left';
-
-    // Containerverladung
+    this.container.append(this.userTitle);
 
     // Erstellen einer Benutzerschaltfläche für die Navigation
     this.userNavBtn = document.createElement('button');
+    this.userNavBtn.className = this.defaultBtnClassList;
     this.userNavBtn.innerHTML = this.title;
-
-    // füge Elementen Stile hinzu
-    this.container.className = this.className;
-    this.userNavBtn.className = this.defaultBtnClassName;
 
     // Benutzerstatus
     active ? this.activate() : this.deactivate();
-
-    // füge Elemente zum Dom hinzu
-    this.container.append(this.userTitle);
 
     // To-Do-Liste erstellen
     this.noteList = new NoteList(this.title);
@@ -53,7 +46,6 @@ class User {
       this.activate();
     });
   }
-  /// nav
 
   activate() {
     // Event-Erstellung  "deactivateActiveUser"

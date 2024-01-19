@@ -7,19 +7,26 @@ class Note {
     this.done = done;
     this.id = id;
 
+    // Stilvariablen erstellen
+    this.itemClassName = 'box';
+    this.activeItemBorderClassName = 'boxBorder_active';
+    this.inputClassName = 'note_textField';
+    this.activeInputClassName = 'note_active';
+    this.buttonContainerClassName = 'container__btn';
+
     // Erstellung des Hauptcontainers
     this.item = document.createElement('div');
-    this.item.classList.add('note', 'box');
+    this.item.className = this.itemClassName;
 
     // Erstelle Textfeld
     this.input = document.createElement('input');
-    this.input.classList.add('inputStyle');
+    this.input.classList.add(this.inputClassName);
     this.input.disabled = true;
     this.item.append(this.input);
 
     // Erstelle Popup
     this.buttonContainer = document.createElement('div');
-    this.buttonContainer.classList.add('container__btn');
+    this.buttonContainer.classList.add(this.buttonContainerClassName);
     this.popup = new Popup(this.buttonContainer);
     this.buttonContainer.append(this.popup.container);
     this.item.append(this.buttonContainer);
@@ -55,7 +62,7 @@ class Note {
   activateTextField() {
     this.done = false;
     this.input.disabled = false;
-    this.item.classList.add('note_border');
+    this.item.classList.add(this.activeItemBorderClassName);
     this.input.focus();
   }
 
@@ -64,7 +71,7 @@ class Note {
    */
   deactivateTextField() {
     this.input.disabled = true;
-    this.item.classList.remove('note_border');
+    this.item.classList.remove(this.activeItemBorderClassName);
   }
 
   /**
@@ -72,12 +79,12 @@ class Note {
    */
   switchStatus() {
     if (this.done) {
-      this.item.classList.add('note_active');
+      this.item.classList.add(this.activeInputClassName);
       this.input.style.textDecoration = 'line-through';
       this.popup.done.innerHTML = 'Cancel';
     } else {
       this.input.style.textDecoration = 'none';
-      this.item.classList.remove('note_active');
+      this.item.classList.remove(this.activeInputClassName);
       this.popup.done.innerHTML = 'Resolve';
     }
   }
@@ -93,9 +100,6 @@ class Note {
     this.input.addEventListener('mouseleave', mouseLeaveHandler);
   }
 
-  /**
-   * die Notiz wird gelöscht
-   */
   dispatchDeleteNote() {
     const removeNote = new CustomEvent(NoteEvent.removeNote, {
       detail: { id: this.id },
