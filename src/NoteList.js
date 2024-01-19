@@ -1,43 +1,55 @@
 import Note from './Note.js';
-import Modal from './Modal.js';
+import MessageWindow from './MessageWindow.js';
 import UserEvent from './enums/user-event.enum.js';
+import NoteEvent from './enums/note-event.enum.js';
 
 class NoteList {
-  constructor(parent, title) {
+  constructor(userId) {
     this.noteList = [];
-    // this.currentNote = undefined;
-    this.listContainer = document.createElement('div');
-    this.listContainer.classList.add('list');
-    this.form = document.createElement('form');
-    this.input = document.createElement('input');
-    this.buttonWrapper = document.createElement('div');
-    this.button = document.createElement('button');
-    this.title = title;
-    this.parent = parent;
+    this.userId = userId;
 
+    // Erstellung des Hauptcontainers
+    this.element = document.createElement('div');
+
+    // Erstelle Form-Container
+    this.form = document.createElement('form');
     this.form.classList.add('form');
+    this.element.append(this.form);
+    this.form.reset();
+
+    // Erstelle input
+    this.input = document.createElement('input');
     this.input.classList.add('form__input');
     this.input.placeholder = 'Enter the title of the new task';
-    this.buttonWrapper.classList.add('form__btn-container');
-    this.button.classList.add('form__btn');
-    this.button.textContent = 'Add a task';
-
-    this.buttonWrapper.append(this.button);
     this.form.append(this.input);
-    this.form.reset();
+
+    // Erstelle Button
+    this.buttonWrapper = document.createElement('div');
+    this.buttonWrapper.classList.add('form__btn-container');
+    this.button = document.createElement('button');
+    this.button.classList.add('form__btn');
+    this.buttonWrapper.append(this.button);
+    this.button.textContent = 'Add a task';
     this.form.append(this.buttonWrapper);
-    this.parent.append(this.form);
-    this.parent.append(this.listContainer);
 
-    // erstellen Dialog-Fenster
-    this.infoMessage = new Modal();
+    // Erstelle List- Container
+    this.listContainer = document.createElement('div');
+    this.listContainer.classList.add('list');
+    this.element.append(this.listContainer);
 
+    // Erstelle Dialog-Fenster
+    this.infoMessage = new MessageWindow();
+
+    this.initialise();
+
+    // Events
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.addAndSaveNote(false, this.input.value);
 
       this.form.reset();
     });
+
     // verfolgt das Ereignis der Benutzerlöschung. Wenn ein Benutzer gelöscht wird,
     // werden seine Notizen aus dem Speicher des Browsers gelöscht
     document.addEventListener(UserEvent.removeUser, (event) => {
@@ -45,9 +57,10 @@ class NoteList {
       this.noteList = [];
     });
 
-    document.addEventListener(UserEvent.removeNote, (event) => {
+    // Remove Note Event
+    document.addEventListener(NoteEvent.removeNote, (event) => {
       const indexOfNoteToRemove = this.noteList.findIndex(
-        (note) => note === event.detail.note
+        (note) => note.id === event.detail.id
       );
       if (indexOfNoteToRemove >= 0) {
         this.removeNote(indexOfNoteToRemove);
@@ -55,27 +68,13 @@ class NoteList {
       }
     });
 
-    document.addEventListener(UserEvent.updateNoteStatus, (event) => {
-      this.noteList.forEach((note) => {
-        if (note === event.detail.note) {
-          note.done = event.detail.note.done;
-          this.saveLS();
-        }
-      });
+    // Update Note Event
+    document.addEventListener(NoteEvent.updateNote, (event) => {
+      this.saveNoteList();
+      if (event.detail.withAlert) {
+        this.infoMessage.showMessage('Note: successfully updated');
+      }
     });
-
-    document.addEventListener(UserEvent.updateNote, (event) => {
-      this.noteList.forEach((note) => {
-        if (note === event.detail.note) {
-          note.name = event.detail.noteItem;
-          this.saveLS();
-          this.infoMessage.showMessage('Note: successfully updated');
-        }
-      });
-    });
-
-    this.initialise();
-    this.checkEmpty();
   }
 
   /**
@@ -86,7 +85,6 @@ class NoteList {
     const newNote = new Note(done, item);
     this.noteList.push(newNote);
     this.listContainer.append(newNote.item);
-    this.checkEmpty();
   }
 
   addAndSaveNote(done, item) {
@@ -100,24 +98,23 @@ class NoteList {
       return;
     }
     this.addNote(done, item);
-    this.saveLS();
+    this.saveNoteList();
   }
 
   removeNote(index) {
     const noteToRemove = this.noteList[index];
     noteToRemove.item.remove();
     this.noteList.splice(index, 1);
-    this.saveLS();
-    this.checkEmpty();
+    this.saveNoteList();
   }
 
   /**
    * Speichern von Notizdaten auf localStorage
    *
    */
-  saveLS() {
+  saveNoteList() {
     localStorage.setItem(
-      this.title,
+      this.userId,
       JSON.stringify(
         this.noteList.map((item) => ({
           note: item.toJSON(),
@@ -132,30 +129,16 @@ class NoteList {
    */
 
   initialise() {
-    if (!localStorage.getItem(this.title)) return;
+    if (!localStorage.getItem(this.userId)) return;
     const list = this.getNoteList();
 
     list.forEach(({ note }) => {
-      this.addNote(note.done, note.name);
+      this.addNote(note.done, note.name, note.id);
     });
   }
 
-  /**
-   * Prüfung, wenn das Feld leer ist, wird die entsprechende Meldung angezeigt
-   *
-   */
-
-  checkEmpty() {
-    if (this.noteList.length === 0) {
-      this.empty = document.createElement('div');
-      this.empty.classList.add('empty__list');
-      this.listContainer.append(this.empty);
-      this.empty.innerHTML = 'Empty page';
-    } else if (this.empty) this.empty.remove();
-  }
-
   getNoteList() {
-    return JSON.parse(localStorage.getItem(this.title));
+    return JSON.parse(localStorage.getItem(this.userId));
   }
 }
 

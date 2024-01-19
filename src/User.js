@@ -33,7 +33,15 @@ class User {
     this.container.append(this.userTitle);
 
     // To-Do-Liste erstellen
-    this.noteList = new NoteList(this.container, this.title);
+    this.noteList = new NoteList(this.title);
+    this.container.append(this.noteList.element);
+
+    document.addEventListener(UserEvent.removeUser, (event) => {
+      if (event.detail.userTitle === this.title) {
+        this.userNavBtn.remove();
+        this.container.remove();
+      }
+    });
 
     // wenn Sie das Ereignis "deactivateActiveUser"
     // lesen, ändert der aktive Benutzer seinen Status auf inaktiv.

@@ -1,12 +1,13 @@
 import User from './User.js';
 import UserEvent from './enums/user-event.enum.js';
-import Modal from './Modal.js';
+import Modal from './MessageWindow.js';
 
 class TaskManager {
   constructor() {
     this.currentUser = undefined;
     this.userList = [];
-    this.modal = new Modal();
+    this.infoMessage = new Modal();
+
     // Erstelle APP-Container
     const element = document.createElement('div');
     element.className = 'app';
@@ -18,20 +19,17 @@ class TaskManager {
     this.removeUserBtn = this.createRemoveUserButton();
     element.append(this.removeUserBtn);
 
-    // Erstelle Elemente
-    this.nav = document.createElement('nav');
+    // Erstelle Manager Container
     this.container = document.createElement('div');
-    this.wrapperNav = document.createElement('div');
-
-    // füge Elementen Stile hinzu
     this.container.classList.add('container');
-    this.nav.classList.add('nav');
-
-    // füge Elemente zum Dom hinzu
-    this.wrapperNav.append(this.nav);
-    this.container.append(this.wrapperNav);
     element.append(this.container);
 
+    // Erstelle nav Container
+    this.nav = document.createElement('nav');
+    this.nav.classList.add('nav');
+    this.container.append(this.nav);
+
+    // Event User-Activate
     document.addEventListener(UserEvent.userActivated, (event) => {
       this.currentUser = this.userList.find(
         (user) => user.title === event.detail.userTitle
@@ -51,11 +49,6 @@ class TaskManager {
     addUserBtn.addEventListener('click', () => {
       this.addAndSaveUser(prompt('enter User Name:'));
     });
-    // addUserBtn.addEventListener('click', () => {
-    //   this.modal.showInput().then((inputValue) => {
-    //     this.addAndSaveUser(inputValue);
-    //   });
-    // });
     return addUserBtn;
   }
 
@@ -72,12 +65,12 @@ class TaskManager {
   addAndSaveUser(title) {
     const foundDuplicate = this.userList.find((user) => user.title === title);
     if (foundDuplicate) {
-      this.modal.showMessage('Same name is forbidden!', 'red');
+      this.infoMessage.showMessage('Same name is forbidden!', 'red');
       return;
     }
     this.addNewUser(title).activate();
     this.saveNavList();
-    this.modal.showMessage(`user "${title}" added`);
+    this.infoMessage.showMessage(`user "${title}" added`);
   }
 
   /**
@@ -90,7 +83,6 @@ class TaskManager {
     this.currentUser = new User(title);
     this.userList.push(this.currentUser);
     this.nav.append(this.currentUser.userNavBtn);
-    // this.currentUser.activate();
     return this.currentUser;
   }
 
@@ -118,10 +110,9 @@ class TaskManager {
     let needToSave = false;
     if (indexOfUserToRemove !== -1) {
       const userToRemove = this.userList[indexOfUserToRemove];
-      userToRemove.userNavBtn.remove();
-      userToRemove.container.remove();
 
       // Event User Remove für seine Notizen aus dem Speicher zu löschen
+      // und User Elemente vom User zu löschen
       const removeUser = new CustomEvent(UserEvent.removeUser, {
         detail: { userTitle: userToRemove.title },
       });
@@ -129,7 +120,7 @@ class TaskManager {
 
       this.userList.splice(indexOfUserToRemove, 1);
       needToSave = true;
-      this.modal.showMessage(`user "${userToRemove.title}" removed`);
+      this.infoMessage.showMessage(`user "${userToRemove.title}" removed`);
     }
 
     const newСurrentUser = this.userList[this.userList.length - 1];
@@ -150,7 +141,6 @@ class TaskManager {
     let activeUser;
 
     list.forEach(({ user }) => {
-      // create newUser
       const newUser = this.addNewUser(user.title);
       if (user.active) activeUser = newUser;
     });

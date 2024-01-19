@@ -39,7 +39,7 @@ class Popup {
   }
 
   createCircleElement() {
-    for (let i = 1; i < 4; i++) {
+    for (let i = 1; i < 4; i += 1) {
       this.circle = document.createElement('div');
       this.circle.className = this.circleClassName;
       this.container.append(this.circle);
