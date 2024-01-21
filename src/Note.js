@@ -1,4 +1,4 @@
-import Popup from './Popup.js';
+import NoteManagerModal from './NoteManagerModal.js';
 import NoteEvent from './enums/note-event.enum.js';
 
 class Note {
@@ -24,23 +24,23 @@ class Note {
     this.input.disabled = true;
     this.item.append(this.input);
 
-    // Erstelle Popup
+    // Erstelle NoteManager -Popup
     this.buttonContainer = document.createElement('div');
     this.buttonContainer.classList.add(this.buttonContainerClassName);
-    this.popup = new Popup(this.buttonContainer);
-    this.buttonContainer.append(this.popup.container);
+    this.noteManager = new NoteManagerModal(this.buttonContainer);
+    this.buttonContainer.append(this.noteManager.container);
     this.item.append(this.buttonContainer);
 
     this.input.value = this.name;
     this.switchStatus();
 
     // Events
-    this.popup.delete.addEventListener('click', () => {
+    this.noteManager.delete.addEventListener('click', () => {
       this.dispatchDeleteNote();
     });
 
     // Status Note Event
-    this.popup.done.addEventListener('click', () => {
+    this.noteManager.done.addEventListener('click', () => {
       this.done = !this.done;
       this.deactivateTextField();
       this.switchStatus();
@@ -48,7 +48,7 @@ class Note {
     });
 
     // change Note Event
-    this.popup.edit.addEventListener('click', () => {
+    this.noteManager.edit.addEventListener('click', () => {
       this.activateTextField();
       this.switchStatus();
       this.updateAndSaveText();
@@ -81,11 +81,11 @@ class Note {
     if (this.done) {
       this.item.classList.add(this.activeInputClassName);
       this.input.style.textDecoration = 'line-through';
-      this.popup.done.innerHTML = 'Cancel';
+      this.noteManager.done.innerHTML = 'Cancel';
     } else {
       this.input.style.textDecoration = 'none';
       this.item.classList.remove(this.activeInputClassName);
-      this.popup.done.innerHTML = 'Resolve';
+      this.noteManager.done.innerHTML = 'Resolve';
     }
   }
 

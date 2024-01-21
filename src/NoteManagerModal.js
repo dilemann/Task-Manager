@@ -1,4 +1,4 @@
-class Popup {
+class NoteManagerModal {
   constructor() {
     // Stilvariablen erstellen
     this.className = 'popup__nav-container';
@@ -51,4 +51,4 @@ class Popup {
   }
 }
 
-export default Popup;
+export default NoteManagerModal;
