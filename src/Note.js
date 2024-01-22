@@ -1,109 +1,121 @@
+import NoteManagerModal from './NoteManagerModal.js';
+import NoteEvent from './enums/note-event.enum.js';
+
 class Note {
-  constructor(parent, name = '', done = '') {
-    this._done = done;
-    this._note = [];
-    this.parent = parent;
+  constructor(done, name = '', id = new Date().getTime()) {
     this.name = name;
-    this._done = done;
+    this.done = done;
+    this.id = id;
+
+    // Stilvariablen erstellen
+    this.itemClassName = 'box';
+    this.activeItemBorderClassName = 'boxBorder_active';
+    this.inputClassName = 'note_textField';
+    this.activeInputClassName = 'note_active';
+    this.buttonContainerClassName = 'container__btn';
+
+    // Erstellung des Hauptcontainers
     this.item = document.createElement('div');
-    this.buttonContainer = document.createElement('div');
-    this.doneButton = document.createElement('button');
-    this.editButton = document.createElement('button');
-    this.saveButton = document.createElement('button');
-    this.deleteButton = document.createElement('button');
+    this.item.className = this.itemClassName;
+
+    // Erstelle Textfeld
     this.input = document.createElement('input');
+    this.input.classList.add(this.inputClassName);
     this.input.disabled = true;
-    this.writeField = document.createElement('span');
-    // add a class
-    this.item.classList.add('note', 'box');
-    this.input.classList.add('inputStyle');
-    this.buttonContainer.classList.add('container__btn');
-    this.editButton.classList.add('note__edit__btn', 'btn');
-    this.saveButton.classList.add('note__save__btn', 'btn');
-    this.doneButton.classList.add('note__done__btn', 'btn');
-    this.deleteButton.classList.add('note__remove__btn', 'btn');
-    this.writeField.classList.add('note__write');
-
-    this.doneButton.textContent = 'Resolve';
-    this.editButton.textContent = 'Edit';
-    this.saveButton.textContent = 'Save';
-    this.deleteButton.textContent = 'Remove';
-
-    // add to parent
-    this.parent.container.append(this.item);
     this.item.append(this.input);
-    this.item.append(this.writeField);
+
+    // Erstelle NoteManager -Popup
+    this.buttonContainer = document.createElement('div');
+    this.buttonContainer.classList.add(this.buttonContainerClassName);
+    this.noteManager = new NoteManagerModal(this.buttonContainer);
+    this.buttonContainer.append(this.noteManager.container);
     this.item.append(this.buttonContainer);
-    this.buttonContainer.append(this.editButton);
-    this.buttonContainer.append(this.saveButton);
-    this.buttonContainer.append(this.doneButton);
-    this.buttonContainer.append(this.deleteButton);
-    this.deleteButton.addEventListener('click', () => this.delete());
-    this.doneButton.addEventListener('click', () => {
-      this.done = !this.done;
-      this.modifyLS();
-    });
-
-    this.editButton.addEventListener('click', () => {
-      this._feldActivate();
-    });
-
-    this.saveButton.addEventListener('click', () => {
-      this._feldDEActivate();
-      this.modifyLS();
-    });
 
     this.input.value = this.name;
-    this.noteStatus();
+    this.switchStatus();
+
+    // Events
+    this.noteManager.delete.addEventListener('click', () => {
+      this.dispatchDeleteNote();
+    });
+
+    // Status Note Event
+    this.noteManager.done.addEventListener('click', () => {
+      this.done = !this.done;
+      this.deactivateTextField();
+      this.switchStatus();
+      this.dispatchUpdateNote();
+    });
+
+    // change Note Event
+    this.noteManager.edit.addEventListener('click', () => {
+      this.activateTextField();
+      this.switchStatus();
+      this.updateAndSaveText();
+    });
   }
 
-  set done(item) {
-    this._done = item;
-    this._feldDEActivate();
-    this.noteStatus();
-  }
-
-  get done() {
-    return this._done;
-  }
-
-  _feldActivate() {
+  /**
+   *Aktiviert das Feld zum Bearbeiten einer Notiz.
+   *Setzt den Fertigstellungsstatus auf `false`.
+   */
+  activateTextField() {
     this.done = false;
     this.input.disabled = false;
-    this.item.classList.add('note_border');
+    this.item.classList.add(this.activeItemBorderClassName);
+    this.input.focus();
   }
 
-  _feldDEActivate() {
+  /**
+   *Deaktiviert das Feld zum Bearbeiten einer Notiz.
+   */
+  deactivateTextField() {
     this.input.disabled = true;
-    this.item.classList.remove('note_border');
+    this.item.classList.remove(this.activeItemBorderClassName);
   }
 
-  noteStatus() {
-    if (this.done) this.item.classList.add('note_active');
-    else this.item.classList.remove('note_active');
-  }
-
-  modifyLS() {
-    if (localStorage.getItem(this.parent.title)) {
-      const list = JSON.parse(localStorage.getItem(this.parent.title));
-      list.forEach((element) => {
-        if (element.id === this.id) {
-          element.name = this.input.value;
-          element.done = this._done;
-        }
-      });
-      localStorage.setItem(this.parent.title, JSON.stringify(list));
+  /**
+   * Aktualisiert die Farbe der Notiz in Abhängigkeit von ihrer Fertigstellung.
+   */
+  switchStatus() {
+    if (this.done) {
+      this.item.classList.add(this.activeInputClassName);
+      this.input.style.textDecoration = 'line-through';
+      this.noteManager.done.innerHTML = 'Cancel';
+    } else {
+      this.input.style.textDecoration = 'none';
+      this.item.classList.remove(this.activeInputClassName);
+      this.noteManager.done.innerHTML = 'Resolve';
     }
   }
 
-  delete() {
-    this.parent._noteList.splice(this.id - 1, 1);
-    this.parent._noteList.forEach((element) => (element.id = 0));
-    this.parent._noteList.forEach(
-      (element) => (element.id = this.parent.getNewId())
-    );
-    this.parent.saveLS();
-    this.item.remove();
+  updateAndSaveText() {
+    const mouseLeaveHandler = () => {
+      this.name = this.input.value;
+      this.deactivateTextField();
+      this.dispatchUpdateNote(true);
+
+      this.input.removeEventListener('mouseleave', mouseLeaveHandler);
+    };
+    this.input.addEventListener('mouseleave', mouseLeaveHandler);
+  }
+
+  dispatchDeleteNote() {
+    const removeNote = new CustomEvent(NoteEvent.removeNote, {
+      detail: { id: this.id },
+    });
+    document.dispatchEvent(removeNote);
+  }
+
+  dispatchUpdateNote(withAlert) {
+    const updateNote = new CustomEvent(NoteEvent.updateNote, {
+      detail: { withAlert },
+    });
+    document.dispatchEvent(updateNote);
+  }
+
+  toJSON() {
+    return { name: this.name, done: this.done, id: this.id };
   }
 }
 

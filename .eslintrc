@@ -7,6 +7,10 @@
     "no-param-reassign": "off",
     "no-return-assign": "off",
     "comma-dangle": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "operator-linebreak": "off",
+    "class-methods-use-this": "off",
+    "no-unused-expressions": "warn",
+    "object-curly-newline": "warn"
   }
 }
