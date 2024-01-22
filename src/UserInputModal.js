@@ -1,8 +1,10 @@
+import ModalEvent from './enums/modal-event.enum.js';
+
 class UserInputModal {
   constructor() {
+    this.active = true;
     // Erstelle HauptContainer
     this.container = document.createElement('div');
-
     this.container.innerHTML = "Enter the user's name:";
     this.container.classList.add('modal_content');
     document.body.appendChild(this.container);
@@ -27,7 +29,24 @@ class UserInputModal {
     // Event
     this.cancelButton.addEventListener('click', () => {
       this.container.remove();
+      this.active = false;
     });
+  }
+
+  set active(bool) {
+    this.activeValue = bool;
+    this.dispatchScreenLock();
+  }
+
+  get active() {
+    return this.activeValue;
+  }
+
+  dispatchScreenLock() {
+    const screenLock = new CustomEvent(ModalEvent.screenLock, {
+      detail: { screenLock: this.active },
+    });
+    document.dispatchEvent(screenLock);
   }
 
   getValue() {

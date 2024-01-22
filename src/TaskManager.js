@@ -1,23 +1,27 @@
 import User from './User.js';
 import UserEvent from './enums/user-event.enum.js';
+import ModalEvent from './enums/modal-event.enum.js';
 import MessageWindow from './MessageWindow.js';
 import UserInputModal from './UserInputModal.js';
+
 import UserSelectionModal from './UserSelectionModal.js';
 
 class TaskManager {
   constructor() {
     this.currentUser = undefined;
     this.userList = [];
-    this.overlay = document.createElement('div');
-    this.overlay.className = 'overlay';
 
     // Stilvariablen erstellen
     this.containerClassName = 'container';
     this.appClassName = 'app';
-
     this.navClassName = 'nav';
     this.addBtnClassList = 'action__btn btn';
     this.removeBtnClassList = 'remove__btn btn';
+
+    // Fensterschloss Hintergrund definieren
+    this.overlay = document.createElement('div');
+    this.overlay.className = 'overlay';
+    document.body.append(this.overlay);
 
     // Erstelle APP-Container
     const element = document.createElement('div');
@@ -49,6 +53,15 @@ class TaskManager {
       this.saveNavList();
     });
 
+    // Event der Bildschirmsperre
+    document.addEventListener(ModalEvent.screenLock, (event) => {
+      if (event.detail.screenLock) {
+        this.overlay.classList.add('active');
+        return;
+      }
+      this.overlay.classList.remove('active');
+    });
+
     this.initialise();
   }
 
@@ -62,6 +75,7 @@ class TaskManager {
         if (!userInputModal.input.value) return;
         this.addAndSaveUser(userInputModal.getValue());
         userInputModal.container.remove();
+        userInputModal.active = false;
       });
     });
     return addUserBtn;

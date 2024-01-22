@@ -23,11 +23,23 @@ body {
 }
 
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 99;
+    display: none;
+}
 
+.overlay.active {
+    display: block;
+}
 
 /* buttons */
 .btn {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,8 +197,7 @@ body {
 
 
 /* popup */
-.popup__nav-container {
-
+.noteManager_container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -194,10 +205,12 @@ body {
     position: relative;
     margin-right: 20px;
     height: 100%;
+    z-index: 50;
+    cursor: pointer;
 
 }
 
-.popup__circle {
+.noteManager_circle {
     height: 5px;
     width: 5px;
     background-color: rgb(181, 181, 176);
@@ -208,10 +221,9 @@ body {
 
 .popup__nav-container:hover .popup__circle {
     background-color: #ff6600;
-    cursor: pointer;
 }
 
-.popup__dropdown-menu {
+.noteManager_dropdown {
     display: none;
     position: absolute;
     top: 100%;
@@ -224,30 +236,33 @@ body {
     transition: opacity 0.3s, transform 0.8s;
     text-align: start;
     line-height: 2.2;
-    z-index: 5;
     background-color: rgb(27, 54, 75);
 
 }
 
-.popup__dropdown-menu.popup__show-modal {
+.noteManager_show-modal {
+
+    z-index: 100;
+}
+
+
+.noteManager_show-modal .noteManager_dropdown {
     display: block;
     opacity: 1;
     transform: translateX(-87%) translateY(20px);
+
 }
 
-.popup__dropdown-menu p {
+.noteManager_show-modal .noteManager_dropdown p {
 
     border-radius: 3px;
     margin: 0;
     padding-left: 10px;
     cursor: pointer;
-
-
     transition: background-color 0.3s, color 0.3s;
 }
 
-
-.popup__dropdown-menu .done:hover {
+.noteManager_show-modal .noteManager_dropdown .done:hover {
     color: rgb(1, 188, 1);
     box-shadow: 0 0 10px 0 rgb(1, 188, 1);
 
@@ -256,12 +271,12 @@ body {
 }
 
 
-.popup__dropdown-menu .edit:hover {
+.noteManager_show-modal .noteManager_dropdown .edit:hover {
     color: rgb(255, 183, 48);
     box-shadow: 0 0 10px 0 rgb(255, 183, 48);
 }
 
-.popup__dropdown-menu .delete:hover {
+.noteManager_show-modal .noteManager_dropdown .delete:hover {
     color: red;
     box-shadow: 0 0 10px 0 red;
 }
@@ -271,6 +286,7 @@ body {
 
 /* user-input-modal-window */
 .modal_content {
+    z-index: 100;
     box-shadow: 0 0 10px 0 rgb(125, 214, 214);
     position: fixed;
     top: 60%;
@@ -310,11 +326,13 @@ body {
 }
 
 .modal_ok {
+    cursor: pointer;
     background-color: rgb(100, 190, 220);
     margin-right: 10px;
 }
 
 .modal_cancel {
+    cursor: pointer;
     background-color: rgb(236, 120, 120);
     margin-right: 5px;
 }
@@ -329,12 +347,12 @@ body {
 
 /* user_popup */
 .user_popup {
-    text-align: start;
+    position: relative;
+    cursor: pointer;
     display: flex;
     align-items: center;
     height: 30px;
     margin: 30px 0;
-
 }
 
 .user_popup h2 {
@@ -348,6 +366,7 @@ body {
     height: 100%;
     margin-left: 10px;
     padding-right: 20px;
+    z-index: 50;
 }
 
 .user_dropdown::before {
@@ -365,22 +384,15 @@ body {
 
 }
 
+.user_dropdown.active_userName {
+    z-index: 100;
+}
+
 .user_dropdown.active_userName::before {
     top: 18px;
     transform: rotate(-225deg);
 }
 
-
-
-.user_dropdown h2 {
-    height: 100%;
-    cursor: pointer;
-    outline: none;
-    color: inherit;
-    border-radius: 10px;
-    background-color: inherit;
-
-}
 
 .user_dropdown .option {
     position: absolute;
@@ -389,15 +401,10 @@ body {
     background-color: rgb(27, 54, 75);
     border-radius: 10px;
     display: none;
-    z-index: 50;
-
-
 }
 
 .user_dropdown .option div {
-
     padding: 8px 5px 0;
-    cursor: pointer;
 }
 
 .user_dropdown .option div:hover {
@@ -406,31 +413,9 @@ body {
     color: aquamarine;
 }
 
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
-}
-
-
-
-
 .user_dropdown.active_userName .option {
     display: block;
-    z-index: 1000;
 }
-
-
-.active_overlay {
-    display: block;
-}
-
-
 
 
 

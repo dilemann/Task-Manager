@@ -1,5 +1,8 @@
+import ModalEvent from './enums/modal-event.enum.js';
+
 class UserSelectionModal {
   constructor() {
+    this.active = false;
     // erstelle container
     this.container = document.createElement('div');
     this.container.className = 'user_popup';
@@ -25,7 +28,24 @@ class UserSelectionModal {
 
     this.dropDown.addEventListener('click', () => {
       this.dropDown.classList.toggle('active_userName');
+      this.active = !this.active;
     });
+  }
+
+  set active(bool) {
+    this.activeValue = bool;
+    this.dispatchScreenLock();
+  }
+
+  get active() {
+    return this.activeValue;
+  }
+
+  dispatchScreenLock() {
+    const screenLock = new CustomEvent(ModalEvent.screenLock, {
+      detail: { screenLock: this.active },
+    });
+    document.dispatchEvent(screenLock);
   }
 
   show(currentUserName) {
