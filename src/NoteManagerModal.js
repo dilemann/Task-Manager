@@ -1,10 +1,13 @@
+import ModalEvent from './enums/modal-event.enum.js';
+
 class NoteManagerModal {
   constructor() {
+    this.active = false;
     // Stilvariablen erstellen
-    this.className = 'popup__nav-container';
-    this.dropDownMenuClassName = 'popup__dropdown-menu';
-    this.circleClassName = 'popup__circle';
-    this.toggleModalClassName = 'popup__show-modal';
+    this.containerClassName = 'noteManager_container';
+    this.dropDownMenuClassName = 'noteManager_dropdown';
+    this.circleClassName = 'noteManager_circle';
+    this.toggleModalClassName = 'noteManager_show-modal';
     this.doneClassName = 'done';
     this.editClassName = 'edit';
     this.deleteClassName = 'delete';
@@ -22,7 +25,7 @@ class NoteManagerModal {
     this.delete.innerHTML = 'Remove';
 
     // füge Elementen Stile hinzu
-    this.container.className = this.className;
+    this.container.className = this.containerClassName;
     this.modal.className = this.dropDownMenuClassName;
     this.done.className = this.doneClassName;
     this.edit.className = this.editClassName;
@@ -38,6 +41,22 @@ class NoteManagerModal {
     this.container.addEventListener('click', () => this.toggleModal());
   }
 
+  set active(bool) {
+    this.activeValue = bool;
+    this.dispatchScreenLock();
+  }
+
+  get active() {
+    return this.activeValue;
+  }
+
+  dispatchScreenLock() {
+    const screenLock = new CustomEvent(ModalEvent.screenLock, {
+      detail: { screenLock: this.active },
+    });
+    document.dispatchEvent(screenLock);
+  }
+
   createCircleElement() {
     for (let i = 1; i < 4; i += 1) {
       this.circle = document.createElement('div');
@@ -47,7 +66,8 @@ class NoteManagerModal {
   }
 
   toggleModal() {
-    this.modal.classList.toggle(this.toggleModalClassName);
+    this.container.classList.toggle(this.toggleModalClassName);
+    this.active = !this.active;
   }
 }
 
