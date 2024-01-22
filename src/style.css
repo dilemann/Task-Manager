@@ -1,13 +1,11 @@
 * {
     padding: 0;
     border: 0;
-
 }
 
 h2 {
     margin: 0;
 }
-
 
 body {
 
@@ -21,7 +19,6 @@ body {
     position: relative;
 
 }
-
 
 .overlay {
     position: fixed;
@@ -38,50 +35,65 @@ body {
     display: block;
 }
 
+
+
 /* buttons */
 .btn {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30px;
-    width: 90px;
     color: inherit;
     transition: background-color 1s;
     cursor: pointer;
+    border-radius: 3px;
 }
 
-.action__btn {
-    border-radius: 3px;
-    background-color: rgb(100, 190, 220);
+.action__btn,
+.remove__btn {
     display: inline;
-    margin-right: 10px;
+    height: 30px;
+    width: 90px;
     font-size: 12px;
 
 }
 
+.modal_ok,
+.modal_cancel {
+    display: inline;
+    min-width: 50px;
+    height: 22px;
+    padding: 3px 0;
+}
+
+.action__btn,
+.modal_ok {
+    background-color: rgb(100, 190, 220);
+    margin-right: 10px;
+}
+
+.modal_ok:hover,
 .action__btn:hover {
     background-color: rgb(5, 164, 217);
 }
 
-.remove__btn {
+.remove__btn,
+.modal_cancel {
     border-radius: 3px;
     display: inline;
     background-color: rgb(236, 120, 120);
     font-size: 12px;
 }
 
+.modal_cancel:hover,
 .remove__btn:hover {
     background-color: rgb(243, 71, 71);
 }
 
 
 .form__btn {
-    cursor: pointer;
     padding: 5px 15px;
-    color: bisque;
     display: block;
     background-color: rgb(100, 190, 220);
-    transition: background-color .5s;
     border-radius: 5px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -91,40 +103,40 @@ body {
     background-color: rgb(5, 164, 217);
 }
 
-.user__btn {
-
-    background-color: inherit;
-    border: 1px solid rgb(185, 168, 168);
-    border-radius: 4px;
-    transition: background-color .3s;
-    margin: 0 5px 5px 0;
-}
-
-.user__btn:not(.user__btn_active):hover {
-    box-shadow: 0 0 10px 3px rgb(125, 214, 214);
-}
-
-.user__btn_active {
-
-    box-shadow: 0 0 10px 3px rgb(125, 214, 214);
-    color: bisque;
-}
-
 
 
 
 /* containers */
-.container__btn {
+
+/* form-container*/
+.form {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    border: 1px solid rgb(185, 168, 168);
+    border-radius: 10px;
+}
+
+.noteManager_flexContainer {
     height: 20px;
     display: flex;
     flex-direction: row;
     background-color: inherit;
 }
 
-.box {
-    background-color: rgb(33, 60, 80);
+.noteManager_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
-    color: #fff;
+    margin-right: 20px;
+    height: 100%;
+    z-index: 50;
+    cursor: pointer;
+}
+
+.note_container {
     margin-bottom: 10px;
     max-width: 85%;
     border: 1px solid rgb(173, 173, 173);
@@ -134,12 +146,22 @@ body {
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 }
 
+.user_selection_container {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    text-align: start;
+    align-items: center;
+    height: 30px;
+    margin: 30px 0;
+}
+
+
 
 
 
 /* note */
 .note_active {
-
     background-color: rgb(91, 143, 89);
 }
 
@@ -154,7 +176,6 @@ body {
 }
 
 .boxBorder_active {
-
     box-shadow: 0 0 10px 3px rgb(125, 214, 125);
 }
 
@@ -162,16 +183,6 @@ body {
 
 
 /* form */
-.form {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 20px;
-    border: 1px solid rgb(185, 168, 168);
-    border-radius: 10px;
-
-
-}
-
 .form__input {
     display: block;
     width: 100%;
@@ -179,8 +190,8 @@ body {
     padding: 5px 10px;
     outline: none;
     background-color: inherit;
-
     color: beige;
+
 }
 
 .form:focus-within {
@@ -191,32 +202,13 @@ body {
 
 
 
-
-
-
-
-
-/* popup */
-.noteManager_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    margin-right: 20px;
-    height: 100%;
-    z-index: 50;
-    cursor: pointer;
-
-}
-
+/* noteManager popup */
 .noteManager_circle {
     height: 5px;
     width: 5px;
     background-color: rgb(181, 181, 176);
     border-radius: 50%;
     transition: background-color 1s;
-
 }
 
 .popup__nav-container:hover .popup__circle {
@@ -237,24 +229,19 @@ body {
     text-align: start;
     line-height: 2.2;
     background-color: rgb(27, 54, 75);
-
 }
 
-.noteManager_show-modal {
-
+.noteManager_container.noteManager_show-modal {
     z-index: 100;
 }
-
 
 .noteManager_show-modal .noteManager_dropdown {
     display: block;
     opacity: 1;
     transform: translateX(-87%) translateY(20px);
-
 }
 
 .noteManager_show-modal .noteManager_dropdown p {
-
     border-radius: 3px;
     margin: 0;
     padding-left: 10px;
@@ -265,9 +252,6 @@ body {
 .noteManager_show-modal .noteManager_dropdown .done:hover {
     color: rgb(1, 188, 1);
     box-shadow: 0 0 10px 0 rgb(1, 188, 1);
-
-
-
 }
 
 
@@ -285,7 +269,7 @@ body {
 
 
 /* user-input-modal-window */
-.modal_content {
+.inputUser_modal_container {
     z-index: 100;
     box-shadow: 0 0 10px 0 rgb(125, 214, 214);
     position: fixed;
@@ -301,10 +285,11 @@ body {
 
 }
 
-.modal_content input {
+.inputUser_modal_container input {
     padding: 5px;
     color: inherit;
     display: block;
+    outline: none;
     background-color: inherit;
     border: 1px solid beige;
     border-radius: 3px;
@@ -312,55 +297,23 @@ body {
     align-self: center
 }
 
-.modal_content button {
-    color: inherit;
-    min-width: 50px;
-    border-radius: 3px;
-    padding: 3px 0;
-}
-
 .modal_message {
-
     color: inherit;
-
 }
 
-.modal_ok {
-    cursor: pointer;
-    background-color: rgb(100, 190, 220);
-    margin-right: 10px;
-}
-
-.modal_cancel {
-    cursor: pointer;
-    background-color: rgb(236, 120, 120);
-    margin-right: 5px;
-}
-
-.modal_content input:focus {
+.inputUser_modal_container input:focus {
     box-shadow: 0 0 10px 0 rgb(125, 214, 214);
     outline: none;
 }
 
 
 
-
-/* user_popup */
-.user_popup {
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    height: 30px;
-    margin: 30px 0;
-}
-
-.user_popup h2 {
+/* user_selection-popup */
+.user_selection_container h2 {
     height: 100%;
-
 }
 
-.user_dropdown {
+.user_selection_dropdown {
     position: relative;
     min-width: 80px;
     height: 100%;
@@ -369,7 +322,7 @@ body {
     z-index: 50;
 }
 
-.user_dropdown::before {
+.user_selection_dropdown::before {
     content: '';
     position: absolute;
     width: 8px;
@@ -381,39 +334,38 @@ body {
     border-right: 2px solid rgb(27, 54, 75);
     transform: rotate(-45deg);
     transition: 0.3s;
-
 }
 
-.user_dropdown.active_userName {
+.user_selection_dropdown.active_userName {
     z-index: 100;
 }
 
-.user_dropdown.active_userName::before {
+.user_selection_dropdown.active_userName::before {
     top: 18px;
     transform: rotate(-225deg);
 }
 
 
-.user_dropdown .option {
+.user_selection_dropdown .option {
     position: absolute;
     top: 37px;
     min-width: 110px;
     background-color: rgb(27, 54, 75);
-    border-radius: 10px;
+    border-radius: 5px;
     display: none;
 }
 
-.user_dropdown .option div {
+.user_selection_dropdown .option div {
     padding: 8px 5px 0;
 }
 
-.user_dropdown .option div:hover {
+.user_selection_dropdown .option div:hover {
     border-radius: 3px;
     box-shadow: 0 0 10px 0 rgb(125, 214, 214);
     color: aquamarine;
 }
 
-.user_dropdown.active_userName .option {
+.user_selection_dropdown.active_userName .option {
     display: block;
 }
 
@@ -423,7 +375,6 @@ body {
 @media screen and (max-width: 768px) {
 
     body {
-
         font-size: 10px;
     }
 
@@ -435,19 +386,9 @@ body {
         font-size: inherit;
     }
 
-    .box {
+    .note_container {
         margin: 0 auto 5px;
         border-radius: 5px;
-    }
-
-
-    .nav {
-        justify-content: center;
-    }
-
-    .inputStyle {
-        padding: 5px;
-
     }
 
     .form__btn {
@@ -458,49 +399,50 @@ body {
         padding: 5px;
     }
 
-    .container__btn {
+    .noteManager_flexContainer {
         height: 17px;
     }
 
-    .btn {
+    .action__btn,
+    .remove__btn {
         height: 25px;
         width: 70px;
         font-size: 10px;
 
     }
 
-    .popup__dropdown-menu {
+    .noteManager_dropdown {
         width: 70px;
         line-height: 1.5;
     }
 
-    .popup__dropdown-menu.popup__show-modal {
+    .noteManager_show-modal .noteManager_dropdown {
         transform: translateX(-60%) translateY(10px);
     }
 
-    .user_popup {
+    .user_selection_container {
         margin: 15px 0;
 
     }
 
-    .user_dropdown {
+    .user_selection_dropdown {
 
         min-width: 40px;
     }
 
-    .user_dropdown::before {
+    .user_selection_dropdown::before {
         top: 5px;
         width: 5px;
         height: 5px;
 
     }
 
-    .user_dropdown.active_userName::before {
+    .user_selection_dropdown.active_userName::before {
         top: 11px;
 
     }
 
-    .user_dropdown .option {
+    .user_selection_dropdown .option {
         top: 20px;
     }
 
