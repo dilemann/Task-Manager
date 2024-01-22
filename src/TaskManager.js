@@ -2,15 +2,19 @@ import User from './User.js';
 import UserEvent from './enums/user-event.enum.js';
 import MessageWindow from './MessageWindow.js';
 import UserInputModal from './UserInputModal.js';
+import UserSelectionModal from './UserSelectionModal.js';
 
 class TaskManager {
   constructor() {
     this.currentUser = undefined;
     this.userList = [];
+    this.overlay = document.createElement('div');
+    this.overlay.className = 'overlay';
 
     // Stilvariablen erstellen
     this.containerClassName = 'container';
     this.appClassName = 'app';
+
     this.navClassName = 'nav';
     this.addBtnClassList = 'action__btn btn';
     this.removeBtnClassList = 'remove__btn btn';
@@ -31,11 +35,6 @@ class TaskManager {
     this.container.classList.add(this.containerClassName);
     element.append(this.container);
 
-    // Erstelle nav Container
-    this.nav = document.createElement('nav');
-    this.nav.classList.add(this.navClassName);
-    this.container.append(this.nav);
-
     // Erstelle Dialog-Fenster
     this.infoMessage = new MessageWindow();
 
@@ -45,12 +44,12 @@ class TaskManager {
         (user) => user.title === event.detail.userTitle
       );
       this.loadUserData(this.currentUser.title);
+      if (this.userPopup) this.userPopup.show(this.currentUser.title);
 
       this.saveNavList();
     });
 
     this.initialise();
-    // this.userInputModal = new UserInputModal();
   }
 
   createAddUserButton() {
@@ -85,6 +84,7 @@ class TaskManager {
       return;
     }
     this.addNewUser(title).activate();
+
     this.saveNavList();
     this.infoMessage.showMessage(`user "${title}" added`);
   }
@@ -97,8 +97,13 @@ class TaskManager {
     if (!title) return;
 
     this.currentUser = new User(title);
+    if (this.userList.length === 0) {
+      this.userPopup = new UserSelectionModal();
+      this.container.append(this.userPopup.container);
+    }
     this.userList.push(this.currentUser);
-    this.nav.append(this.currentUser.userNavBtn);
+
+    this.userPopup.option.append(this.currentUser.userTitle);
     return this.currentUser;
   }
 
@@ -123,7 +128,6 @@ class TaskManager {
       (user) => user.active === true
     );
 
-    let needToSave = false;
     if (indexOfUserToRemove !== -1) {
       const userToRemove = this.userList[indexOfUserToRemove];
 
@@ -135,17 +139,18 @@ class TaskManager {
       document.dispatchEvent(removeUser);
 
       this.userList.splice(indexOfUserToRemove, 1);
-      needToSave = true;
+      this.saveNavList();
       this.infoMessage.showMessage(`user "${userToRemove.title}" removed`);
     }
 
-    const newСurrentUser = this.userList[this.userList.length - 1];
-    if (newСurrentUser) {
-      this.currentUser = newСurrentUser;
-      this.currentUser.activate();
-      needToSave = false;
+    const newСurrentUser = this.userList[0];
+    if (!newСurrentUser) {
+      this.userPopup.container.remove();
+      return;
     }
-    if (needToSave) this.saveNavList();
+
+    this.currentUser = newСurrentUser;
+    this.currentUser.activate();
   }
 
   /**

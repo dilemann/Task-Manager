@@ -7,20 +7,14 @@ class User {
 
     // Stilvariablen erstellen
     this.className = 'user-container';
-    this.activeBtnClassName = 'user__btn_active';
-    this.defaultBtnClassList = 'user__btn btn';
 
     // Erstellung von Containern und Kopfzeilen
     this.container = document.createElement('div');
     this.container.className = this.className;
-    this.userTitle = document.createElement('h2');
-    this.userTitle.style.textAlign = 'left';
-    this.container.append(this.userTitle);
 
     // Erstellen einer Benutzerschaltfläche für die Navigation
-    this.userNavBtn = document.createElement('button');
-    this.userNavBtn.className = this.defaultBtnClassList;
-    this.userNavBtn.innerHTML = this.title;
+    this.userTitle = document.createElement('div');
+    this.userTitle.innerHTML = this.title;
 
     // Benutzerstatus
     active ? this.activate() : this.deactivate();
@@ -31,7 +25,7 @@ class User {
 
     document.addEventListener(UserEvent.removeUser, (event) => {
       if (event.detail.userTitle === this.title) {
-        this.userNavBtn.remove();
+        this.userTitle.remove();
         this.container.remove();
       }
     });
@@ -42,7 +36,7 @@ class User {
       if (this.active) this.deactivate();
     });
 
-    this.userNavBtn.addEventListener('click', () => {
+    this.userTitle.addEventListener('click', () => {
       this.activate();
     });
   }
@@ -55,8 +49,7 @@ class User {
     // nachdem der Ereignis-Listener das Signal ausgelöst und das "deactivate()"
     // des Benutzers mit dem Flag "active=true" ausgeführt hat, dann wird die :
     this.active = true;
-    this.userNavBtn.classList.add(this.activeBtnClassName);
-    this.userTitle.innerHTML = `User: ${this.title}`;
+
     // Event-Erstellung  "userActivated"
     const userActivated = new CustomEvent(UserEvent.userActivated, {
       detail: { userTitle: this.title },
@@ -66,7 +59,6 @@ class User {
 
   deactivate() {
     this.active = false;
-    this.userNavBtn.classList.remove(this.activeBtnClassName);
   }
 
   toJSON() {
