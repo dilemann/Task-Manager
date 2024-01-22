@@ -8,11 +8,11 @@ class Note {
     this.id = id;
 
     // Stilvariablen erstellen
-    this.itemClassName = 'box';
+    this.itemClassName = 'note_container';
     this.activeItemBorderClassName = 'boxBorder_active';
     this.inputClassName = 'note_textField';
     this.activeInputClassName = 'note_active';
-    this.buttonContainerClassName = 'container__btn';
+    this.buttonContainerClassName = 'noteManager_flexContainer';
 
     // Erstellung des Hauptcontainers
     this.item = document.createElement('div');

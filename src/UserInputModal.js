@@ -6,7 +6,7 @@ class UserInputModal {
     // Erstelle HauptContainer
     this.container = document.createElement('div');
     this.container.innerHTML = "Enter the user's name:";
-    this.container.classList.add('modal_content');
+    this.container.classList.add('inputUser_modal_container');
     document.body.appendChild(this.container);
 
     // Erstelle input
@@ -18,13 +18,13 @@ class UserInputModal {
     this.okButton = document.createElement('button');
     this.okButton.textContent = 'OK';
     this.container.appendChild(this.okButton);
-    this.okButton.className = 'modal_ok';
+    this.okButton.classList = 'modal_ok btn';
 
     // Erstelle cancel-Button
     this.cancelButton = document.createElement('button');
     this.cancelButton.textContent = 'Cancel';
     this.container.appendChild(this.cancelButton);
-    this.cancelButton.className = 'modal_cancel';
+    this.cancelButton.classList = 'modal_cancel btn';
 
     // Event
     this.cancelButton.addEventListener('click', () => {

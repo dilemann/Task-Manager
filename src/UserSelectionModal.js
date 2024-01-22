@@ -5,7 +5,7 @@ class UserSelectionModal {
     this.active = false;
     // erstelle container
     this.container = document.createElement('div');
-    this.container.className = 'user_popup';
+    this.container.className = 'user_selection_container';
 
     // erstelle title
     this.header = document.createElement('h2');
@@ -14,7 +14,7 @@ class UserSelectionModal {
 
     // erstelle dropDown
     this.dropDown = document.createElement('div');
-    this.dropDown.className = 'user_dropdown';
+    this.dropDown.className = 'user_selection_dropdown';
     this.container.appendChild(this.dropDown);
 
     // erstelle dropDown userTitle

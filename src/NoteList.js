@@ -9,16 +9,17 @@ class NoteList {
     this.userId = userId;
 
     // Stilvariablen erstellen
+    this.formClassName = 'form';
     this.inputClassname = 'form__input';
     this.btnContainerClassName = 'form__btn-container';
-    this.btnClassName = 'form__btn';
+    this.btnClassList = 'form__btn btn';
 
     // Erstellung des Hauptcontainers
     this.element = document.createElement('div');
 
     // Erstelle Form-Container
     this.form = document.createElement('form');
-    this.form.classList.add('form');
+    this.form.classList.add(this.formClassName);
     this.element.append(this.form);
     this.form.reset();
 
@@ -32,7 +33,7 @@ class NoteList {
     this.buttonWrapper = document.createElement('div');
     this.buttonWrapper.classList.add(this.btnContainerClassName);
     this.button = document.createElement('button');
-    this.button.classList.add(this.btnClassName);
+    this.button.className = this.btnClassList;
     this.buttonWrapper.append(this.button);
     this.button.textContent = 'Add a task';
     this.form.append(this.buttonWrapper);
