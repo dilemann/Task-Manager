@@ -1,6 +1,6 @@
 {
   "name": "todo-list",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Dieses kleine Projekt befasst sich mit  plain js frontend. Es erlaubt eine Liste von Aufgaben zu erstellen, diese zu bearbeiten und zu markieren.",
   "devDependencies": {
     "eslint-config-airbnb": "^19.0.4"
