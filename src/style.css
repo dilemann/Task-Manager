@@ -211,7 +211,7 @@ body {
     transition: background-color 1s;
 }
 
-.popup__nav-container:hover .popup__circle {
+.noteManager_container:hover .noteManager_circle {
     background-color: #ff6600;
 }
 
@@ -275,9 +275,9 @@ body {
     position: fixed;
     top: 60%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -60%);
     background-color: inherit;
-    padding: 15px 20px;
+    padding: 25px 20px 15px;
     max-width: 220px;
     border: 1px solid beige;
     border-radius: 5px;
@@ -357,6 +357,7 @@ body {
 
 .user_selection_dropdown .option div {
     padding: 8px 5px 0;
+
 }
 
 .user_selection_dropdown .option div:hover {
