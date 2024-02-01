@@ -68,7 +68,8 @@ class NoteList {
       const indexOfNoteToRemove = this.noteList.findIndex(
         (note) => note.id === event.detail.id
       );
-      if (indexOfNoteToRemove >= 0) {
+      console.log(indexOfNoteToRemove);
+      if (indexOfNoteToRemove !== -1) {
         this.removeNote(indexOfNoteToRemove);
         this.infoMessage.showMessage('Note: successfully deleted');
       }
@@ -87,8 +88,8 @@ class NoteList {
    * Erstellt eine neue Notiz mit dem angegebenen Textinhalt.
    * @param {string} item - Der Textinhalt der neuen Notiz.
    */
-  addNote(done, item) {
-    const newNote = new Note(done, item);
+  addNote(done, item, id) {
+    const newNote = new Note(done, item, id);
     this.noteList.push(newNote);
     this.listContainer.append(newNote.item);
   }
@@ -141,6 +142,7 @@ class NoteList {
     list.forEach(({ note }) => {
       this.addNote(note.done, note.name, note.id);
     });
+    console.log(this.noteList);
   }
 
   getNoteList() {
