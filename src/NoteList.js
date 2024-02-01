@@ -68,7 +68,6 @@ class NoteList {
       const indexOfNoteToRemove = this.noteList.findIndex(
         (note) => note.id === event.detail.id
       );
-      console.log(indexOfNoteToRemove);
       if (indexOfNoteToRemove !== -1) {
         this.removeNote(indexOfNoteToRemove);
         this.infoMessage.showMessage('Note: successfully deleted');
@@ -142,7 +141,6 @@ class NoteList {
     list.forEach(({ note }) => {
       this.addNote(note.done, note.name, note.id);
     });
-    console.log(this.noteList);
   }
 
   getNoteList() {
