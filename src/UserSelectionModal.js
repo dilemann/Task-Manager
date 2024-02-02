@@ -30,6 +30,12 @@ class UserSelectionModal {
       this.dropDown.classList.toggle('active_userName');
       this.active = !this.active;
     });
+
+    document.addEventListener(ModalEvent.closeModal, () => {
+      if (!this.active) return;
+      this.active = false;
+      this.dropDown.classList.remove('active_userName');
+    });
   }
 
   set active(bool) {
