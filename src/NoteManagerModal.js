@@ -39,6 +39,12 @@ class NoteManagerModal {
 
     // addeventlistener
     this.container.addEventListener('click', () => this.toggleModal());
+
+    document.addEventListener(ModalEvent.closeModal, () => {
+      if (!this.active) return;
+      this.active = false;
+      this.container.classList.remove(this.toggleModalClassName);
+    });
   }
 
   set active(bool) {

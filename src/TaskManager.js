@@ -57,6 +57,7 @@ class TaskManager {
     document.addEventListener(ModalEvent.screenLock, (event) => {
       if (event.detail.screenLock) {
         this.overlay.classList.add('active');
+        this.overlay.onclick = () => this.dispatchCloseModal();
         return;
       }
       this.overlay.classList.remove('active');
@@ -197,6 +198,11 @@ class TaskManager {
 
   getNavList() {
     return JSON.parse(localStorage.getItem('user-list'));
+  }
+
+  dispatchCloseModal() {
+    const closeModal = new CustomEvent(ModalEvent.closeModal);
+    document.dispatchEvent(closeModal);
   }
 }
 
