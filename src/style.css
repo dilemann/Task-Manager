@@ -39,9 +39,6 @@ body {
 
 /* buttons */
 .btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: inherit;
     transition: background-color 1s;
     cursor: pointer;
@@ -59,10 +56,8 @@ body {
 
 .modal_ok,
 .modal_cancel {
-    display: inline;
-    min-width: 50px;
+    width: 50px;
     height: 22px;
-    padding: 3px 0;
 }
 
 .action__btn,
@@ -154,6 +149,13 @@ body {
     align-items: center;
     height: 30px;
     margin: 30px 0;
+}
+
+.inputUser_containerBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 
@@ -410,6 +412,13 @@ body {
         width: 70px;
         font-size: 10px;
 
+    }
+
+    .modal_ok,
+    .modal_cancel {
+        width: 35px;
+        height: 16px;
+        font-size: 8px;
     }
 
     .noteManager_dropdown {

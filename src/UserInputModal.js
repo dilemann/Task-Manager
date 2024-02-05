@@ -14,16 +14,21 @@ class UserInputModal {
     this.container.appendChild(this.input);
     this.input.focus();
 
+    // Erstelle Button- Container
+    this.containerBtn = document.createElement('div');
+    this.containerBtn.classList.add('inputUser_containerBtn');
+    this.container.appendChild(this.containerBtn);
+
     // Erstelle confirm-Button
     this.okButton = document.createElement('button');
-    this.okButton.textContent = 'OK';
-    this.container.appendChild(this.okButton);
+    this.okButton.textContent = 'Ok';
+    this.containerBtn.appendChild(this.okButton);
     this.okButton.classList = 'modal_ok btn';
 
     // Erstelle cancel-Button
     this.cancelButton = document.createElement('button');
     this.cancelButton.textContent = 'Cancel';
-    this.container.appendChild(this.cancelButton);
+    this.containerBtn.appendChild(this.cancelButton);
     this.cancelButton.classList = 'modal_cancel btn';
 
     // Event
